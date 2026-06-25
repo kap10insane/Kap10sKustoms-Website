@@ -93,6 +93,8 @@ async function loadSkin() {
   class="btn primary buy-btn"
   href="#"
   id="buyNowButton"
+  data-product-id="${product.id}"
+  onclick="startCheckout(event)"
 >
   Buy Now
 </a>
