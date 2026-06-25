@@ -1,0 +1,42 @@
+{
+  "id": "pizzster389-blue-collar",
+  "name": "Blue Collar",
+  "truck": "Pizzster 389",
+  "game": "American Truck Simulator",
+  "category": "Truck Skin",
+  "price": 4.99,
+  "currency": "USD",
+  "version": "1.55+",
+  "status": "Available",
+  "featured": true,
+  "description": "A clean, working-class inspired paint scheme featuring bold yellow striping and polished accents. Built for drivers who appreciate a timeless, no-nonsense look.",
+  "download": "Instant Digital Download",
+  "compatibility": [
+    "Pizzster 389 Mod"
+  ],
+  "includes": [
+    "Truck Skin",
+    "Installation Guide",
+    "Future Updates"
+  ],
+  "requirements": [
+    "Pizzster 389 Mod",
+    "American Truck Simulator 1.55+"
+  ],
+  "images": [
+    "hero.jpg",
+    "drv.jpg",
+    "pass.jpg",
+    "rear.jpg"
+  ],
+  "checkoutLink": "",
+  "stripeLink": "",
+  "paypalLink": "",
+ 
+  "tags": [
+    "Blue",
+    "Classic",
+    "Working Class",
+    "Pizzster"
+  ]
+}
