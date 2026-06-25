@@ -111,4 +111,45 @@ async function loadSkin() {
   }
 }
 
+document.addEventListener("click", async (event) => {
+  const buyNowButton = event.target.closest("#buyNowButton");
+  if (!buyNowButton) return;
+
+  event.preventDefault();
+
+  buyNowButton.textContent = "Opening Checkout...";
+  buyNowButton.style.pointerEvents = "none";
+
+  const params = new URLSearchParams(window.location.search);
+  const productPath = params.get("product");
+
+  try {
+    const response = await fetch(`images/ats/${productPath}/product.json`);
+    const product = await response.json();
+
+    const checkoutResponse = await fetch("https://kap10skustoms-api.kap10skustoms.workers.dev/checkout", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        productId: product.id
+      })
+    });
+
+    const checkoutData = await checkoutResponse.json();
+
+    if (!checkoutData.ok || !checkoutData.checkoutUrl) {
+      throw new Error("Checkout URL missing.");
+    }
+
+    window.location.href = checkoutData.checkoutUrl;
+  } catch (err) {
+    console.error(err);
+    alert("Checkout could not be started. Please try again.");
+    buyNowButton.textContent = "Buy Now";
+    buyNowButton.style.pointerEvents = "auto";
+  }
+});
+
 loadSkin();
