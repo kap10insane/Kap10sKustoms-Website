@@ -89,10 +89,13 @@ async function loadSkin() {
 
           <h2>$${product.price.toFixed(2)} USD</h2>
 
-<a class="btn primary buy-btn" href="${product.checkoutLink || "#"}">
+<a
+  class="btn primary buy-btn"
+  href="#"
+  id="buyNowButton"
+>
   Buy Now
 </a>
-
 <div class="trust-list">
   <div>✓ Instant Digital Download</div>
   <div>✓ Secure Checkout</div>
