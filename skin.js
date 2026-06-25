@@ -154,4 +154,37 @@ document.addEventListener("click", async (event) => {
   }
 });
 
+async function startCheckout(event) {
+  event.preventDefault();
+
+  const buyNowButton = event.currentTarget;
+  const productId = buyNowButton.dataset.productId;
+
+  buyNowButton.textContent = "Opening Checkout...";
+  buyNowButton.style.pointerEvents = "none";
+
+  try {
+    const checkoutResponse = await fetch("https://kap10skustoms-api.kap10skustoms.workers.dev/checkout", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ productId })
+    });
+
+    const checkoutData = await checkoutResponse.json();
+
+    if (!checkoutData.ok || !checkoutData.checkoutUrl) {
+      throw new Error("Checkout URL missing.");
+    }
+
+    window.location.href = checkoutData.checkoutUrl;
+  } catch (err) {
+    console.error(err);
+    alert("Checkout could not be started. Please try again.");
+    buyNowButton.textContent = "Buy Now";
+    buyNowButton.style.pointerEvents = "auto";
+  }
+}
+
 loadSkin();
