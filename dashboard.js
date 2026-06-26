@@ -115,6 +115,13 @@ const product = {
 
 const method = editingProductId ? "PUT" : "POST";
 
+console.log("Saving product", {
+  editingProductId,
+  method,
+  url,
+  product
+});
+
 const response = await fetch(url, {
   method,
         headers: {
