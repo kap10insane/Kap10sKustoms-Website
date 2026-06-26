@@ -46,73 +46,45 @@
         const data = await response.json();
 
         if (!data.ok || !data.session) {
-          statusEl.textContent = "We could not verify this purchase yet. Please refresh in a moment.";
+          statusEl.textContent = "We could not verify this purchase yet.";
           return;
         }
 
         const session = data.session;
 
         if (session.payment_status === "paid") {
-          statusEl.textContent = "Payment verified. Your download is ready.";
-
-          const productName = session.product_name || "Your Download";
-          const customerEmail = session.customer_email || "Not provided";
-          const total = ((session.amount_total || 0) / 100).toFixed(2);
-          const currency = String(session.currency || "usd").toUpperCase();
-          const downloadsUsed = session.download_count ?? 0;
-          const expires = session.download_expires
-            ? new Date(session.download_expires).toLocaleDateString()
-            : "Not available";
+          statusEl.textContent = "Payment verified. Your order was received.";
 
           detailsEl.innerHTML = `
-            <div class="order-summary polished-order-summary">
-              <div class="download-header">
-                <div class="download-icon">⬇</div>
-                <div>
-                  <h2>${productName}</h2>
-                  <p>Your secure file is ready below.</p>
-                </div>
-              </div>
+  <div class="order-summary polished-order-summary">
 
-              <div class="order-grid">
-                <div>
-                  <span>Email</span>
-                  <strong>${customerEmail}</strong>
-                </div>
+    <h2>${session.product_name}</h2>
 
-                <div>
-                  <span>Total</span>
-                  <strong>$${total} ${currency}</strong>
-                </div>
+    <p><strong>Email:</strong> ${session.customer_email || "Not provided"}</p>
 
-                <div>
-                  <span>Downloads Used</span>
-                  <strong>${downloadsUsed}</strong>
-                </div>
+    <p><strong>Total:</strong>
+      $${(session.amount_total / 100).toFixed(2)}
+      ${String(session.currency || "usd").toUpperCase()}
+    </p>
 
-                <div>
-                  <span>Download Expires</span>
-                  <strong>${expires}</strong>
-                </div>
-              </div>
+    <p><strong>Downloads Used:</strong>
+      ${session.download_count}
+    </p>
 
-              <a
-                class="btn primary download-btn"
-                href="https://kap10skustoms-api.kap10skustoms.workers.dev/download?token=${session.download_token}">
-                Download ${productName}
-              </a>
+    <p><strong>Download Expires:</strong>
+      ${new Date(session.download_expires).toLocaleDateString()}
+    </p>
 
-              <p class="download-note">
-                Save your file somewhere safe. This download link is secure and time-limited.
-              </p>
-            </div>
+    <br>
 
-            <section class="might-like">
-              <h3>You Might Also Like</h3>
-              <p>More ATS skins and Kap10's Kustoms downloads are coming soon.</p>
-              <a class="btn secondary" href="ats.html">Browse ATS Products</a>
-            </section>
-          `;
+    <a
+      class="btn primary"
+      href="https://kap10skustoms-api.kap10skustoms.workers.dev/download?token=${session.download_token}">
+      Download ${session.product_name}
+    </a>
+
+  </div>
+`;
         } else {
           statusEl.textContent = "Payment was not completed.";
         }
