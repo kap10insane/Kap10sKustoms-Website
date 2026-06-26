@@ -74,18 +74,26 @@ if (form && newBtn && cancelBtn) {
 
     const formData = new FormData(form);
 
-    const product = {
-      id: formData.get("id"),
-      name: formData.get("name"),
-      slug: formData.get("slug"),
-      category: formData.get("category"),
-      price: Number(formData.get("price") || 0),
-      version: formData.get("version"),
-      image: formData.get("image"),
-      download_file: formData.get("download_file"),
-      description: formData.get("description"),
-      active: formData.get("active") === "on"
-    };
+    const truckFolder = String(formData.get("truck_folder") || "").trim();
+const imageFolder = String(formData.get("image_folder") || "").trim();
+
+const imagePath =
+  truckFolder && imageFolder
+    ? `images/ats/${truckFolder}/${imageFolder}/hero.jpg`
+    : "";
+
+const product = {
+  id: formData.get("id"),
+  name: formData.get("name"),
+  slug: formData.get("slug"),
+  category: formData.get("category"),
+  price: Number(formData.get("price") || 0),
+  version: formData.get("version"),
+  image: imagePath,
+  download_file: formData.get("download_file"),
+  description: formData.get("description"),
+  active: formData.get("active") === "on"
+};
 
     try {
       const response = await fetch(`${API_BASE}/admin/products`, {
