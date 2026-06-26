@@ -705,3 +705,22 @@ a {
   width: 100%;
   text-align: center;
 }
+
+/* Cancel Page Polish */
+.cancel-icon {
+  width: 54px;
+  height: 54px;
+  margin-bottom: 12px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #ffffff;
+  font-size: 2rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, #ff6b35, #ff3b3b);
+  box-shadow: 0 0 30px rgba(255, 85, 55, 0.28);
+}
+
+.cancel-eyebrow {
+  color: #ff9b6a;
+}
