@@ -90,6 +90,9 @@ const product = {
   price: Number(formData.get("price") || 0),
   version: formData.get("version"),
   image: imagePath,
+  truck_folder: truckFolder,
+  image_folder: imageFolder,
+  gallery: JSON.stringify(["hero.jpg", "rear.jpg", "drv.jpg", "pass.jpg"]),
   download_file: formData.get("download_file"),
   description: formData.get("description"),
   active: formData.get("active") === "on"
