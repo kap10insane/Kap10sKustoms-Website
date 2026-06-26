@@ -1,3 +1,41 @@
+const API_BASE = "https://kap10skustoms-api.kap10skustoms.workers.dev";
+
+function formatPrice(cents, fallbackPrice) {
+  if (typeof cents === "number") {
+    return (cents / 100).toFixed(2);
+  }
+
+  if (fallbackPrice !== undefined && fallbackPrice !== null) {
+    return String(fallbackPrice);
+  }
+
+  return "0.00";
+}
+
+function getProductImage(product) {
+  return (
+    product.image_url ||
+    product.imageUrl ||
+    product.thumbnail_url ||
+    product.thumbnailUrl ||
+    product.cover_image ||
+    product.coverImage ||
+    "images/kap10-logo-round.png"
+  );
+}
+
+function getProductName(product) {
+  return product.name || product.title || "Untitled Product";
+}
+
+function getProductDescription(product) {
+  return product.description || "Kap10's Kustoms digital download.";
+}
+
+function getProductId(product) {
+  return product.id || product.product_id || product.productId || "";
+}
+
 async function loadProducts() {
   const grid = document.getElementById("atsProductGrid");
 
@@ -5,62 +43,64 @@ async function loadProducts() {
 
   grid.innerHTML = "<p class='loading-text'>Loading ATS skins...</p>";
 
-  let html = "";
+  try {
+    const response = await fetch(`${API_BASE}/products`);
 
-  for (const truck of atsCatalog) {
-    html += `
-      <section class="truck-section">
-        <h2 class="truck-title">${truck.truckName}</h2>
-        <div class="product-grid">
-    `;
+    if (!response.ok) {
+      throw new Error("Could not load products from API.");
+    }
 
-    for (const folder of truck.products) {
-      const path = `${truck.truckFolder}/${folder}`;
+    const products = await response.json();
 
-      try {
-        const response = await fetch(`images/ats/${path}/product.json`);
+    const atsProducts = Array.isArray(products)
+      ? products.filter((product) => {
+          const category = String(product.category || product.type || "").toLowerCase();
+          return !category || category.includes("ats") || category.includes("skin");
+        })
+      : [];
 
-        if (!response.ok) {
-          throw new Error(`Could not load product.json for ${path}`);
-        }
+    if (!atsProducts.length) {
+      grid.innerHTML = "<p class='loading-text'>No ATS skins found yet.</p>";
+      return;
+    }
 
-        const product = await response.json();
+    grid.innerHTML = atsProducts
+      .map((product) => {
+        const productId = getProductId(product);
+        const name = getProductName(product);
+        const description = getProductDescription(product);
+        const image = getProductImage(product);
+        const price = formatPrice(product.price_cents, product.price);
 
-        html += `
+        return `
           <article class="product-card">
             <img
               class="product-image"
-              src="images/ats/${path}/${product.images[0]}"
-              alt="${product.name}"
+              src="${image}"
+              alt="${name}"
             >
 
             <div class="product-info">
-              <h3>${product.name}</h3>
+              <h3>${name}</h3>
 
-              <p>${product.description}</p>
+              <p>${description}</p>
 
               <div class="product-footer">
-                <span class="price">$${product.price}</span>
+                <span class="price">$${price}</span>
 
-                <a class="btn primary" href="skin.html?product=${encodeURIComponent(path)}">
+                <a class="btn primary" href="skin.html?productId=${encodeURIComponent(productId)}">
                   View Skin
                 </a>
               </div>
             </div>
           </article>
         `;
-      } catch (err) {
-        console.error("Product load failed:", path, err);
-      }
-    }
-
-    html += `
-        </div>
-      </section>
-    `;
+      })
+      .join("");
+  } catch (err) {
+    console.error("Product load failed:", err);
+    grid.innerHTML = "<p class='loading-text'>Could not load ATS skins right now.</p>";
   }
-
-  grid.innerHTML = html || "<p class='loading-text'>No ATS skins found yet.</p>";
 }
 
 loadProducts();
