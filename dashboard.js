@@ -3,6 +3,8 @@ const API_BASE = "https://kap10skustoms-api.kap10skustoms.workers.dev";
 const form = document.getElementById("productForm");
 const newBtn = document.getElementById("newProductBtn");
 const cancelBtn = document.getElementById("cancelProductBtn");
+let dashboardProductsCache = [];
+let editingProductId = null;
 
 async function loadDashboardProducts() {
   const el = document.getElementById("dashboardProducts");
@@ -18,6 +20,8 @@ async function loadDashboardProducts() {
     if (!data.ok || !Array.isArray(data.products)) {
       throw new Error("Invalid product response");
     }
+
+    dashboardProductsCache = data.products;
 
     if (!data.products.length) {
       el.innerHTML = "<p>No products found.</p>";
@@ -43,7 +47,13 @@ async function loadDashboardProducts() {
         </div>
 
         <div class="dashboard-row-actions">
-          <button type="button" class="btn secondary">Edit</button>
+          <button
+  type="button"
+  class="btn secondary edit-product-btn"
+  data-product-id="${product.id}"
+>
+  Edit
+</button>
         </div>
       </article>
     `).join("");
@@ -126,5 +136,36 @@ const product = {
     }
   });
 }
+
+document.addEventListener("click", (event) => {
+  const editButton = event.target.closest(".edit-product-btn");
+  if (!editButton) return;
+
+  const product = dashboardProductsCache.find(
+    p => p.id === editButton.dataset.productId
+  );
+
+  if (!product) return;
+
+  editingProductId = product.id;
+
+  form.id.value = product.id;
+  form.name.value = product.name || "";
+  form.slug.value = product.slug || "";
+  form.category.value = product.category || "";
+  form.price.value = product.price || 0;
+  form.version.value = product.version || "";
+  form.image.value = product.image || "";
+  form.download_file.value = product.download_file || "";
+  form.description.value = product.description || "";
+  form.active.checked = !!product.active;
+
+  form.style.display = "block";
+
+  form.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+});
 
 loadDashboardProducts();
