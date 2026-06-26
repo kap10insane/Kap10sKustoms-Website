@@ -1,21 +1,53 @@
+const API_BASE = "https://kap10skustoms-api.kap10skustoms.workers.dev";
+
+function productImage(product) {
+  return product.image || product.image_url || "images/kap10-logo-round.png";
+}
+
+function productPrice(product) {
+  return Number(product.price || 0).toFixed(2);
+}
+
+function renderList(items) {
+  if (!Array.isArray(items) || !items.length) {
+    return "<li class='check-item'>Included with download</li>";
+  }
+
+  return items.map(item => `<li class="check-item">${item}</li>`).join("");
+}
+
+async function getProductById(productId) {
+  const response = await fetch(`${API_BASE}/products`);
+  const products = await response.json();
+
+  if (!Array.isArray(products)) {
+    throw new Error("Invalid products response.");
+  }
+
+  return products.find(product => product.id === productId);
+}
+
 async function loadSkin() {
   const container = document.getElementById("skinDetail");
   const params = new URLSearchParams(window.location.search);
-  const productPath = params.get("product");
+  const productId = params.get("productId");
 
-  if (!productPath) {
+  if (!container) return;
+
+  if (!productId) {
     container.innerHTML = "<h2>Product not found.</h2>";
     return;
   }
 
   try {
-    const response = await fetch(`images/ats/${productPath}/product.json`);
+    const product = await getProductById(productId);
 
-    if (!response.ok) {
-      throw new Error("Product JSON could not be loaded.");
+    if (!product) {
+      container.innerHTML = "<h2>Product not found.</h2>";
+      return;
     }
 
-    const product = await response.json();
+    const image = productImage(product);
 
     container.innerHTML = `
       <div class="skin-page">
@@ -23,87 +55,55 @@ async function loadSkin() {
           <img
             id="mainImage"
             class="hero-image"
-            src="images/ats/${productPath}/${product.images[0]}"
+            src="${image}"
             alt="${product.name}"
           >
-
-          <div class="thumbnail-row">
-            ${product.images.map(image => `
-              <img
-                class="thumb"
-                src="images/ats/${productPath}/${image}"
-                alt="${product.name} preview"
-                onclick="document.getElementById('mainImage').src='images/ats/${productPath}/${image}'"
-              >
-            `).join("")}
-          </div>
         </div>
 
         <div class="skin-info">
           <h1>${product.name}</h1>
 
-          <p>${product.description}</p>
+          <p>${product.description || ""}</p>
 
           <hr>
 
           <div class="product-detail">
-            <strong>Truck</strong>
-            <span>${product.truck}</span>
+            <strong>Category</strong>
+            <span>${product.category || "Digital Product"}</span>
           </div>
 
           <div class="product-detail">
-            <strong>Game</strong>
-            <span>${product.game}</span>
+            <strong>Version</strong>
+            <span>${product.version || "Current"}</span>
           </div>
-
-          <div class="product-detail">
-  <strong>Category</strong>
-  <span>${product.category}</span>
-</div>
-
 
           <hr>
 
           <div class="info-block">
-  <h3>Compatible</h3>
-  <ul>
-    ${product.compatibility.map(item => `<li class="check-item">${item}</li>`).join("")}
-  </ul>
-</div>
-
-<div class="info-block">
-  <h3>Included</h3>
-  <ul>
-    ${product.includes.map(item => `<li class="check-item">${item}</li>`).join("")}
-  </ul>
-</div>
-
-<div class="info-block">
-  <h3>Requirements</h3>
-  <ul>
-    ${product.requirements.map(item => `<li class="check-item">${item}</li>`).join("")}
-  </ul>
-</div>
+            <h3>Included</h3>
+            <ul>
+              ${renderList(product.includes)}
+            </ul>
+          </div>
 
           <hr>
 
-          <h2>$${product.price.toFixed(2)} USD</h2>
+          <h2>$${productPrice(product)} USD</h2>
 
-<a
-  class="btn primary buy-btn"
-  href="#"
-  id="buyNowButton"
-  data-product-id="${product.id}"
-  onclick="startCheckout(event)"
->
-  Buy Now
-</a>
-<div class="trust-list">
-  <div>✓ Instant Digital Download</div>
-  <div>✓ Secure Checkout</div>
-  <div>✓ Support Available</div>
-</div>
+          <a
+            class="btn primary buy-btn"
+            href="#"
+            id="buyNowButton"
+            data-product-id="${product.id}"
+          >
+            Buy Now
+          </a>
 
+          <div class="trust-list">
+            <div>✓ Instant Digital Download</div>
+            <div>✓ Secure Checkout</div>
+            <div>✓ Support Available</div>
+          </div>
         </div>
       </div>
     `;
@@ -119,52 +119,13 @@ document.addEventListener("click", async (event) => {
 
   event.preventDefault();
 
-  buyNowButton.textContent = "Opening Checkout...";
-  buyNowButton.style.pointerEvents = "none";
-
-  const params = new URLSearchParams(window.location.search);
-  const productPath = params.get("product");
-
-  try {
-    const response = await fetch(`images/ats/${productPath}/product.json`);
-    const product = await response.json();
-
-    const checkoutResponse = await fetch("https://kap10skustoms-api.kap10skustoms.workers.dev/checkout", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        productId: product.id
-      })
-    });
-
-    const checkoutData = await checkoutResponse.json();
-
-    if (!checkoutData.ok || !checkoutData.checkoutUrl) {
-      throw new Error("Checkout URL missing.");
-    }
-
-    window.location.href = checkoutData.checkoutUrl;
-  } catch (err) {
-    console.error(err);
-    alert("Checkout could not be started. Please try again.");
-    buyNowButton.textContent = "Buy Now";
-    buyNowButton.style.pointerEvents = "auto";
-  }
-});
-
-async function startCheckout(event) {
-  event.preventDefault();
-
-  const buyNowButton = event.currentTarget;
   const productId = buyNowButton.dataset.productId;
 
   buyNowButton.textContent = "Opening Checkout...";
   buyNowButton.style.pointerEvents = "none";
 
   try {
-    const checkoutResponse = await fetch("https://kap10skustoms-api.kap10skustoms.workers.dev/checkout", {
+    const checkoutResponse = await fetch(`${API_BASE}/checkout`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -185,6 +146,6 @@ async function startCheckout(event) {
     buyNowButton.textContent = "Buy Now";
     buyNowButton.style.pointerEvents = "auto";
   }
-}
+});
 
 loadSkin();
