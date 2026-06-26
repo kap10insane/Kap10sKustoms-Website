@@ -124,3 +124,51 @@ loadDashboardProducts();
   </div>
 
 </form>
+
+if (form) {
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const formData = new FormData(form);
+
+    const product = {
+      id: formData.get("id"),
+      name: formData.get("name"),
+      slug: formData.get("slug"),
+      category: formData.get("category"),
+      price: Number(formData.get("price") || 0),
+      version: formData.get("version"),
+      image: formData.get("image"),
+      download_file: formData.get("download_file"),
+      description: formData.get("description"),
+      active: formData.get("active") === "on"
+    };
+
+    try {
+      const response = await fetch(`${API_BASE}/admin/products`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(product)
+      });
+
+      const data = await response.json();
+
+      if (!data.ok) {
+        alert(data.error || "Product save failed.");
+        return;
+      }
+
+      alert("Product saved.");
+
+      form.reset();
+      form.style.display = "none";
+
+      loadDashboardProducts();
+    } catch (err) {
+      console.error(err);
+      alert("Product save failed.");
+    }
+  });
+}
