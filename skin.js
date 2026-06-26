@@ -8,6 +8,31 @@ function productPrice(product) {
   return Number(product.price || 0).toFixed(2);
 }
 
+function getGalleryImages(product) {
+  let filenames = [];
+
+  try {
+    filenames = product.gallery ? JSON.parse(product.gallery) : [];
+  } catch (err) {
+    filenames = [];
+  }
+
+  if (!Array.isArray(filenames) || !filenames.length) {
+    filenames = ["hero.jpg"];
+  }
+
+  const truckFolder = product.truck_folder || "";
+  const imageFolder = product.image_folder || "";
+
+  if (!truckFolder || !imageFolder) {
+    return [productImage(product)];
+  }
+
+  return filenames.map((filename) =>
+    `images/ats/${truckFolder}/${imageFolder}/${filename}`
+  );
+}
+
 function renderList(items) {
   if (!Array.isArray(items) || !items.length) {
     return "<li class='check-item'>Included with download</li>";
@@ -47,18 +72,30 @@ async function loadSkin() {
       return;
     }
 
-    const image = productImage(product);
+    const galleryImages = getGalleryImages(product);
+    const image = galleryImages[0];
 
     container.innerHTML = `
       <div class="skin-page">
         <div class="skin-gallery">
-          <img
-            id="mainImage"
-            class="hero-image"
-            src="${image}"
-            alt="${product.name}"
-          >
-        </div>
+  <img
+    id="mainImage"
+    class="hero-image"
+    src="${image}"
+    alt="${product.name}"
+  >
+
+  <div class="thumbnail-row">
+    ${galleryImages.map((galleryImage) => `
+      <img
+        class="thumb"
+        src="${galleryImage}"
+        alt="${product.name} preview"
+        onclick="document.getElementById('mainImage').src='${galleryImage}'"
+      >
+    `).join("")}
+  </div>
+</div>
 
         <div class="skin-info">
           <h1>${product.name}</h1>
