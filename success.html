@@ -11,7 +11,7 @@
       <div class="success-icon">✓</div>
 
       <p class="success-eyebrow">Purchase Complete</p>
-      <h1>Thank you for your purchase!</h1>
+      <h1>Thank you for supporting Kap10's Kustoms.</h1>
 
       <p id="purchaseStatus" class="success-status">
         Verifying your payment...
@@ -53,7 +53,7 @@
         const session = data.session;
 
         if (session.payment_status === "paid") {
-          statusEl.textContent = "Payment verified. Your order was received.";
+          statusEl.textContent = "Your payment has been verified and your download is ready below.";
 
           detailsEl.innerHTML = `
   <div class="order-summary polished-order-summary">
