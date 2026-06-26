@@ -1,3 +1,13 @@
+const API_BASE = "https://kap10skustoms-api.kap10skustoms.workers.dev";
+
+function productImage(product) {
+  return product.image || product.image_url || "images/kap10-logo-round.png";
+}
+
+function productPrice(product) {
+  return Number(product.price || 0).toFixed(2);
+}
+
 async function loadProducts() {
   const grid = document.getElementById("atsProductGrid");
 
@@ -5,62 +15,55 @@ async function loadProducts() {
 
   grid.innerHTML = "<p class='loading-text'>Loading ATS skins...</p>";
 
-  let html = "";
+  try {
+    const response = await fetch(`${API_BASE}/products`);
+    const products = await response.json();
 
-  for (const truck of atsCatalog) {
-    html += `
-      <section class="truck-section">
-        <h2 class="truck-title">${truck.truckName}</h2>
-        <div class="product-grid">
-    `;
+    if (!Array.isArray(products)) {
+      throw new Error("Invalid products response");
+    }
 
-    for (const folder of truck.products) {
-      const path = `${truck.truckFolder}/${folder}`;
+    const atsProducts = products.filter((product) => {
+      const category = String(product.category || "").toLowerCase();
+      return category.includes("truck skin") || category.includes("ats");
+    });
 
-      try {
-        const response = await fetch(`images/ats/${path}/product.json`);
+    if (!atsProducts.length) {
+      grid.innerHTML = "<p class='loading-text'>No ATS skins found yet.</p>";
+      return;
+    }
 
-        if (!response.ok) {
-          throw new Error(`Could not load product.json for ${path}`);
-        }
-
-        const product = await response.json();
-
-        html += `
+    grid.innerHTML = `
+      <div class="product-grid">
+        ${atsProducts.map((product) => `
           <article class="product-card">
             <img
               class="product-image"
-              src="images/ats/${path}/${product.images[0]}"
+              src="${productImage(product)}"
               alt="${product.name}"
             >
 
             <div class="product-info">
               <h3>${product.name}</h3>
 
-              <p>${product.description}</p>
+              <p>${product.description || ""}</p>
 
               <div class="product-footer">
-                <span class="price">$${product.price}</span>
+                <span class="price">$${productPrice(product)}</span>
 
-                <a class="btn primary" href="skin.html?product=${encodeURIComponent(path)}">
+                <a class="btn primary" href="skin.html?productId=${encodeURIComponent(product.id)}">
                   View Skin
                 </a>
               </div>
             </div>
           </article>
-        `;
-      } catch (err) {
-        console.error("Product load failed:", path, err);
-      }
-    }
-
-    html += `
-        </div>
-      </section>
+        `).join("")}
+      </div>
     `;
+  } catch (err) {
+    console.error("Product load failed:", err);
+    grid.innerHTML = "<p class='loading-text'>Could not load ATS skins right now.</p>";
   }
-
-  grid.innerHTML = html || "<p class='loading-text'>No ATS skins found yet.</p>";
 }
 
 loadProducts();
