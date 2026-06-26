@@ -661,3 +661,47 @@ a {
     align-items: flex-start;
   }
 }
+
+/* Related Products on Success Page */
+.related-products {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px;
+}
+
+.related-card {
+  padding: 20px;
+  border-radius: 18px;
+  background: rgba(0, 0, 0, 0.24);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.related-image {
+  height: 120px;
+  margin-bottom: 16px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  font-size: 3rem;
+  background:
+    radial-gradient(circle at center, rgba(45, 125, 255, 0.22), transparent 60%),
+    rgba(255, 255, 255, 0.045);
+  border: 1px dashed rgba(75, 146, 255, 0.35);
+}
+
+.related-card h4 {
+  margin: 0 0 8px;
+  font-size: 1.15rem;
+}
+
+.related-card p {
+  margin: 0 0 16px;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.related-card .btn {
+  width: 100%;
+  text-align: center;
+}
