@@ -109,8 +109,14 @@ const product = {
 };
 
     try {
-      const response = await fetch(`${API_BASE}/admin/products`, {
-        method: "POST",
+      const url = editingProductId
+  ? `${API_BASE}/admin/products/${encodeURIComponent(editingProductId)}`
+  : `${API_BASE}/admin/products`;
+
+const method = editingProductId ? "PUT" : "POST";
+
+const response = await fetch(url, {
+  method,
         headers: {
           "Content-Type": "application/json"
         },
@@ -125,6 +131,8 @@ const product = {
       }
 
       alert("Product saved.");
+
+      editingProductId = null;
 
       form.reset();
       form.style.display = "none";
