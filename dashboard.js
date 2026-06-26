@@ -157,16 +157,17 @@ document.addEventListener("click", (event) => {
 
   editingProductId = product.id;
 
-  form.id.value = product.id;
-  form.name.value = product.name || "";
-  form.slug.value = product.slug || "";
-  form.category.value = product.category || "";
-  form.price.value = product.price || 0;
-  form.version.value = product.version || "";
-  form.image.value = product.image || "";
-  form.download_file.value = product.download_file || "";
-  form.description.value = product.description || "";
-  form.active.checked = !!product.active;
+form.id.value = product.id;
+form.name.value = product.name || "";
+form.slug.value = product.slug || "";
+form.category.value = product.category || "";
+form.price.value = product.price || 0;
+form.version.value = product.version || "";
+form.truck_folder.value = product.truck_folder || "";
+form.image_folder.value = product.image_folder || "";
+form.download_file.value = product.download_file || "";
+form.description.value = product.description || "";
+form.active.checked = !!product.active;
 
   form.style.display = "block";
 
