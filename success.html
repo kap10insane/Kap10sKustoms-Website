@@ -45,12 +45,35 @@
           statusEl.textContent = "Payment verified. Your order was received.";
 
           detailsEl.innerHTML = `
-            <div class="order-summary">
-              <p><strong>Email:</strong> ${session.customer_email || "Not provided"}</p>
-              <p><strong>Product:</strong> ${session.product_id || "Unknown product"}</p>
-              <p><strong>Total:</strong> $${(session.amount_total / 100).toFixed(2)} ${String(session.currency || "usd").toUpperCase()}</p>
-            </div>
-          `;
+  <div class="order-summary">
+
+    <h2>${session.product_name}</h2>
+
+    <p><strong>Email:</strong> ${session.customer_email || "Not provided"}</p>
+
+    <p><strong>Total:</strong>
+      $${(session.amount_total / 100).toFixed(2)}
+      ${String(session.currency || "usd").toUpperCase()}
+    </p>
+
+    <p><strong>Downloads Used:</strong>
+      ${session.download_count}
+    </p>
+
+    <p><strong>Download Expires:</strong>
+      ${new Date(session.download_expires).toLocaleDateString()}
+    </p>
+
+    <br>
+
+    <a
+      class="btn primary"
+      href="https://kap10skustoms-api.kap10skustoms.workers.dev/download?token=${session.download_token}">
+      Download ${session.product_name}
+    </a>
+
+  </div>
+`;
         } else {
           statusEl.textContent = "Payment was not completed.";
         }
