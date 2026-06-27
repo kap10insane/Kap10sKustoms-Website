@@ -33,16 +33,25 @@
       </button>
     </div>
 
-    <section class="dashboard-panel">
-      <h2 id="accountWelcome">Welcome</h2>
-      <p id="accountEmail">Loading account...</p>
-      <p id="accountRole"></p>
+   <section class="dashboard-panel">
+  <div class="account-summary">
+    <h2 id="accountWelcome">Welcome</h2>
+    <p id="accountEmail">Loading account...</p>
+    <span id="accountRole" class="status-pill active"></span>
+  </div>
 
-      <div class="dashboard-form-actions">
-        <a class="btn primary" href="downloads.html">My Downloads</a>
-        <a class="btn secondary" href="orders.html">Order History</a>
-      </div>
-    </section>
+  <div class="account-actions">
+    <a class="account-action-card" href="downloads.html">
+      <strong>My Downloads</strong>
+      <span>View purchased downloads.</span>
+    </a>
+
+    <a class="account-action-card" href="orders.html">
+      <strong>Order History</strong>
+      <span>Receipts and past purchases.</span>
+    </a>
+  </div>
+</section>
   </section>
 </main>
 

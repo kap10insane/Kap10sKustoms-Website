@@ -8,13 +8,19 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   document.getElementById("accountWelcome").textContent =
-    `Welcome, ${account.display_name}`;
+    `Welcome back, ${account.display_name}`;
 
   document.getElementById("accountEmail").textContent =
     account.email;
 
-  document.getElementById("accountRole").textContent =
-    `Role: ${account.role}`;
+  const roleNames = {
+  owner: "Owner",
+  manager: "Manager",
+  customer: "Customer"
+};
+
+document.getElementById("accountRole").textContent =
+  roleNames[account.role] || account.role;
 
   document
     .getElementById("accountLogoutBtn")
