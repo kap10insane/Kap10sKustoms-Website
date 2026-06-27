@@ -140,10 +140,38 @@ async function loadCategoryList() {
         </div>
 
         <div>
-          <span class="status-pill ${category.active ? "active" : "inactive"}">
-            ${category.active ? "Active" : "Inactive"}
-          </span>
-        </div>
+  <span class="status-pill ${category.active ? "active" : "inactive"}">
+    ${category.active ? "Active" : "Inactive"}
+  </span>
+</div>
+
+<div class="dashboard-actions">
+
+  <button
+    class="secondary-button"
+    onclick="editCategory('${category.id}')">
+    Edit
+  </button>
+
+  ${
+    category.active
+      ? `
+      <button
+        class="danger-button"
+        onclick="archiveCategory('${category.id}')">
+        Archive
+      </button>
+      `
+      : `
+      <button
+        class="primary-button"
+        onclick="restoreCategory('${category.id}')">
+        Restore
+      </button>
+      `
+  }
+
+</div>
       </article>
     `).join("");
   } catch (err) {
