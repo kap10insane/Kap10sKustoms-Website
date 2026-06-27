@@ -1050,3 +1050,52 @@ button[data-dashboard-tab].active{
   border-top: 1px solid rgba(255,255,255,.08);
   background: rgba(0,0,0,.16);
 }
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.modal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.modal-field label {
+  font-size: .9rem;
+  font-weight: 600;
+  color: rgba(255,255,255,.88);
+}
+
+.modal-field input,
+.modal-field select,
+.modal-field textarea {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 10px;
+  background: rgba(255,255,255,.04);
+  color: #fff;
+  font: inherit;
+  transition: border-color .2s ease, background .2s ease;
+}
+
+.modal-field textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.modal-field input:focus,
+.modal-field select:focus,
+.modal-field textarea:focus {
+  outline: none;
+  border-color: #4ea8ff;
+  background: rgba(255,255,255,.06);
+}
+
+.modal-field input::placeholder,
+.modal-field textarea::placeholder {
+  color: rgba(255,255,255,.45);
+}
