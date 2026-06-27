@@ -165,8 +165,20 @@
 </section>
 
 <section class="dashboard-panel dashboard-tab-panel" data-dashboard-panel="platforms">
-  <h2>Platforms</h2>
-  <p>Platform management coming soon...</p>
+  <div class="dashboard-panel-header">
+    <div>
+      <h2>Platforms</h2>
+      <p>Manage product platforms.</p>
+    </div>
+
+    <button class="btn primary" type="button" id="newPlatformBtn">
+      + New Platform
+    </button>
+  </div>
+
+  <div id="platformList">
+    Platform management coming next...
+  </div>
 </section>
 
 <section class="dashboard-panel dashboard-tab-panel" data-dashboard-panel="purchase-types">
@@ -211,17 +223,46 @@
       </form>
     </div>
 
+<div id="platformModal" class="modal hidden">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div>
+        <h2 id="platformModalTitle">New Platform</h2>
+        <p>Create or edit a product platform.</p>
+      </div>
+
+      <button class="modal-close" type="button" id="closePlatformModalBtn">
+        ×
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <form class="modal-form" id="platformForm">
+        <div class="modal-field">
+          <label for="platformName">Name</label>
+          <input id="platformName" type="text" placeholder="American Truck Simulator">
+        </div>
+
+        <div class="modal-field">
+          <label for="platformSlug">Slug</label>
+          <input id="platformSlug" type="text" placeholder="ats">
+        </div>
+
+        <div class="modal-field">
+          <label for="platformSortOrder">Sort Order</label>
+          <input id="platformSortOrder" type="number" value="0">
+        </div>
+      </form>
+    </div>
+
     <div class="modal-footer">
-      <button id="cancelCategoryBtn" class="btn secondary" type="button">
+      <button id="cancelPlatformBtn" class="btn secondary" type="button">
         Cancel
       </button>
 
-      <button id="saveCategoryBtn" class="btn primary" type="button">
-        Save Category
+      <button id="savePlatformBtn" class="btn primary" type="button">
+        Save Platform
       </button>
     </div>
   </div>
 </div>
-<script src="dashboard.js"></script>
-</body>
-</html>
