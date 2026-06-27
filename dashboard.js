@@ -4,6 +4,7 @@ const form = document.getElementById("productForm");
 const newBtn = document.getElementById("newProductBtn");
 const cancelBtn = document.getElementById("cancelProductBtn");
 let dashboardProductsCache = [];
+let dashboardProductFilter = "active";
 let editingProductId = null;
 
 async function loadDashboardProducts() {
@@ -21,7 +22,11 @@ async function loadDashboardProducts() {
       throw new Error("Invalid product response");
     }
 
-    const visibleProducts = data.products.filter((product) => product.active);
+    const visibleProducts = data.products.filter((product) => {
+  if (dashboardProductFilter === "active") return product.active;
+  if (dashboardProductFilter === "archived") return !product.active;
+  return true;
+});
 
 dashboardProductsCache = visibleProducts;
 
