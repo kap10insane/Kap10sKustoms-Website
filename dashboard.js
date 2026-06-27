@@ -202,6 +202,25 @@ async function archiveCategory(categoryId) {
   await loadCategories();
 }
   
+async function restoreCategory(categoryId) {
+  const response = await fetch(
+    `${API_BASE}/admin/categories/${encodeURIComponent(categoryId)}/restore`,
+    {
+      method: "POST",
+      credentials: "include"
+    }
+  );
+
+  const data = await response.json();
+
+  if (!response.ok || !data.ok) {
+    alert(data.error || "Unable to restore category.");
+    return;
+  }
+
+  await loadCategoryList();
+  await loadCategories();
+}
 
 async function loadDashboardProducts() {
   const el = document.getElementById("dashboardProducts");
