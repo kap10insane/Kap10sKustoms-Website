@@ -839,3 +839,30 @@ a {
   background:#2f6fed;
   color:#fff;
 }
+
+.download-card {
+  display: grid;
+  grid-template-columns: 220px 1fr auto;
+  gap: 22px;
+  align-items: center;
+  padding: 18px;
+}
+
+.download-card img {
+  width: 220px;
+  height: 124px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.download-card h3 {
+  margin: 0 0 8px;
+}
+
+.download-card p {
+  margin: 4px 0;
+}
+
+.download-card button {
+  min-width: 150px;
+}

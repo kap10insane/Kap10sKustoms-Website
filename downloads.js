@@ -38,7 +38,7 @@ async function loadDownloads() {
 
 function renderDownloadCard(product) {
   return `
-    <article class="product-row">
+    <article class="download-card">
       ${product.image ? `<img src="${escapeHtml(product.image)}" alt="${escapeHtml(product.name)}">` : ""}
       <div>
         <h3>${escapeHtml(product.name)}</h3>
