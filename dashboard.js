@@ -142,6 +142,9 @@ const response = await fetch(url, {
 
       const data = await response.json();
 
+      console.log("DELETE response:", response.status, data);
+      alert(`DELETE status: ${response.status}`);
+
       if (!data.ok) {
         alert(data.error || "Product save failed.");
         return;
