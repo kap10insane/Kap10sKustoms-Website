@@ -977,3 +977,25 @@ button[data-dashboard-tab].active{
   border-radius: 18px;
   box-shadow: 0 24px 80px rgba(0,0,0,.55);
 }
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.modal-header p {
+  margin: 6px 0 0;
+  font-size: .92rem;
+  color: rgba(255,255,255,.65);
+}
