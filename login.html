@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | Kap10's Kustoms</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <a href="index.html" class="header-logo">
+    <img src="images/kap10-logo-round.png" alt="Kap10's Kustoms">
+  </a>
+
+  <nav class="site-nav">
+    <a href="index.html">Home</a>
+    <a href="ats.html">Shop</a>
+    <a href="login.html">Login</a>
+  </nav>
+</header>
+
+<main class="dashboard-page">
+
+  <section class="dashboard-shell" style="max-width:600px;">
+
+    <div class="dashboard-header">
+      <div>
+        <p class="eyebrow">Account</p>
+        <h1>Sign In</h1>
+      </div>
+    </div>
+
+    <section class="dashboard-panel">
+
+      <p>
+        Enter your email address and we'll send you a secure sign-in link.
+      </p>
+
+      <form id="loginForm" class="dashboard-form">
+
+        <label>
+          Email Address
+          <input
+            id="email"
+            type="email"
+            autocomplete="email"
+            required
+            placeholder="you@example.com">
+        </label>
+
+        <div class="dashboard-form-actions">
+          <button class="btn primary" type="submit">
+            Email Me a Login Link
+          </button>
+        </div>
+
+      </form>
+
+      <div id="loginStatus"></div>
+
+    </section>
+
+  </section>
+
+</main>
+
+<script src="login.js"></script>
+
+</body>
+</html>
