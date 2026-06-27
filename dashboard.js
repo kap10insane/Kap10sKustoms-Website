@@ -7,9 +7,11 @@ const cancelBtn = document.getElementById("cancelProductBtn");
 const logoutBtn = document.getElementById("logoutBtn");
 let dashboardProductsCache = [];
 let dashboardCategoriesCache = [];
+let dashboardPlatformsCache = [];
 let dashboardProductFilter = "active";
 let editingProductId = null;
 let editingCategoryId = null;
+let editingPlatformId = null;
 
 async function loadCategories() {
   const select = document.getElementById("productCategorySelect");
@@ -52,8 +54,6 @@ async function loadCategories() {
 async function loadPlatforms() {
   const select = document.getElementById("productPlatformSelect");
 
-  if (!select) return;
-
   try {
     const response = await fetch(`${API_BASE}/admin/platforms`, {
       credentials: "include"
@@ -65,20 +65,98 @@ async function loadPlatforms() {
       throw new Error("Failed to load platforms.");
     }
 
-    select.innerHTML = data.platforms
-      .filter(platform => platform.active)
-      .map(platform => `
-        <option value="${platform.name}">
-          ${platform.name}
-        </option>
-      `)
-      .join("");
+    dashboardPlatformsCache = data.platforms || [];
+
+    if (select) {
+      select.innerHTML = dashboardPlatformsCache
+        .filter(platform => platform.active)
+        .map(platform => `
+          <option value="${platform.name}">
+            ${platform.name}
+          </option>
+        `)
+        .join("");
+    }
 
   } catch (err) {
     console.error(err);
 
-    select.innerHTML =
-      `<option value="">Unable to load platforms</option>`;
+    if (select) {
+      select.innerHTML =
+        `<option value="">Unable to load platforms</option>`;
+    }
+  }
+}
+
+async function loadPlatformList() {
+  const el = document.getElementById("platformList");
+  if (!el) return;
+
+  el.textContent = "Loading platforms...";
+
+  try {
+    const response = await fetch(`${API_BASE}/admin/platforms`, {
+      credentials: "include"
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || !data.ok) {
+      throw new Error("Failed to load platform list.");
+    }
+
+    dashboardPlatformsCache = data.platforms;
+
+    el.innerHTML = data.platforms.map((platform) => {
+      const actionButton = platform.active
+        ? `
+          <button
+            class="dashboard-button danger"
+            onclick="archivePlatform('${platform.id}')">
+            Archive
+          </button>
+        `
+        : `
+          <button
+            class="dashboard-button"
+            onclick="restorePlatform('${platform.id}')">
+            Restore
+          </button>
+        `;
+
+      return `
+        <article class="dashboard-product-row">
+          <div>
+            <h3>${platform.name}</h3>
+            <p>${platform.slug}</p>
+          </div>
+
+          <div>
+            <strong>Order ${platform.sort_order}</strong>
+          </div>
+
+          <div>
+            <span class="status-pill ${platform.active ? "active" : "inactive"}">
+              ${platform.active ? "Active" : "Inactive"}
+            </span>
+          </div>
+
+          <div class="dashboard-actions">
+            <button
+              class="dashboard-button secondary"
+              onclick="editPlatform('${platform.id}')">
+              Edit
+            </button>
+
+            ${actionButton}
+          </div>
+        </article>
+      `;
+    }).join("");
+
+  } catch (err) {
+    console.error(err);
+    el.innerHTML = "<p>Could not load platforms.</p>";
   }
 }
 
@@ -638,4 +716,5 @@ loadCategories();
 loadPlatforms();
 loadPurchaseTypes();
 loadCategoryList();
+loadPlatformList();
 loadDashboardProducts();
