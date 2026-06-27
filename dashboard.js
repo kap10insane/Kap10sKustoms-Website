@@ -78,6 +78,39 @@ async function loadPlatforms() {
   }
 }
 
+async function loadPurchaseTypes() {
+  const select = document.getElementById("productPurchaseTypeSelect");
+
+  if (!select) return;
+
+  try {
+    const response = await fetch(`${API_BASE}/admin/purchase-types`, {
+      credentials: "include"
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || !data.ok) {
+      throw new Error("Failed to load purchase types.");
+    }
+
+    select.innerHTML = data.purchaseTypes
+      .filter(type => type.active)
+      .map(type => `
+        <option value="${type.name}">
+          ${type.name}
+        </option>
+      `)
+      .join("");
+
+  } catch (err) {
+    console.error(err);
+
+    select.innerHTML =
+      `<option value="">Unable to load purchase types</option>`;
+  }
+}
+
 async function loadCategoryList() {
   const el = document.getElementById("categoryList");
   if (!el) return;
@@ -414,5 +447,6 @@ document.addEventListener("click", (event) => {
 
 loadCategories();
 loadPlatforms();
+loadPurchaseTypes();
 loadCategoryList();
 loadDashboardProducts();
