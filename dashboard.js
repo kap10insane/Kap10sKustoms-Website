@@ -266,7 +266,9 @@ const product = {
   name: formData.get("name"),
   slug: formData.get("slug"),
   category: formData.get("category"),
-  price: Number(formData.get("price") || 0),
+platform: formData.get("platform"),
+purchase_type: formData.get("purchase_type"),
+price: Number(formData.get("price") || 0),
   version: formData.get("version"),
   image: imagePath,
   truck_folder: truckFolder,
@@ -340,6 +342,8 @@ form.id.value = product.id;
 form.name.value = product.name || "";
 form.slug.value = product.slug || "";
 form.category.value = product.category || "";
+form.platform.value = product.platform || "";
+form.purchase_type.value = product.purchase_type || "";
 form.price.value = product.price || 0;
 form.version.value = product.version || "";
 form.truck_folder.value = product.truck_folder || "";
