@@ -179,6 +179,28 @@ async function loadCategoryList() {
     el.innerHTML = "<p>Could not load categories.</p>";
   }
 }
+
+async function archiveCategory(categoryId) {
+  if (!confirm("Archive this category?")) return;
+
+  const response = await fetch(
+    `${API_BASE}/admin/categories/${encodeURIComponent(categoryId)}`,
+    {
+      method: "DELETE",
+      credentials: "include"
+    }
+  );
+
+  const data = await response.json();
+
+  if (!response.ok || !data.ok) {
+    alert(data.error || "Unable to archive category.");
+    return;
+  }
+
+  await loadCategoryList();
+  await loadCategories();
+}
   
 
 async function loadDashboardProducts() {
