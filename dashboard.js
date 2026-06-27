@@ -320,5 +320,23 @@ if (logoutBtn) {
   });
 }
 
+document.addEventListener("click", (event) => {
+  const tab = event.target.closest("[data-dashboard-tab]");
+  if (!tab) return;
+
+  const target = tab.dataset.dashboardTab;
+
+  document.querySelectorAll("[data-dashboard-tab]").forEach((btn) => {
+    btn.classList.toggle("active", btn === tab);
+  });
+
+  document.querySelectorAll("[data-dashboard-panel]").forEach((panel) => {
+    panel.classList.toggle(
+      "active",
+      panel.dataset.dashboardPanel === target
+    );
+  });
+});
+
 loadCategories();
 loadDashboardProducts();
