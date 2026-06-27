@@ -280,7 +280,7 @@ if (logoutBtn) {
       console.error("Logout failed:", err);
     }
 
-    window.location.href = "https://kap10skustoms.com/login.html";
+    window.location.href = "https://kap10skustoms.com/";
   });
 }
 
