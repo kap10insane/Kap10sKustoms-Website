@@ -1,5 +1,6 @@
 const API_BASE = "https://kap10skustoms-api.kap10skustoms.workers.dev";
 
+
 const form = document.getElementById("productForm");
 const newBtn = document.getElementById("newProductBtn");
 const cancelBtn = document.getElementById("cancelProductBtn");
