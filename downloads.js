@@ -45,12 +45,16 @@ function renderDownloadCard(product) {
         <p>${escapeHtml(product.category || "Digital Product")}</p>
         <p>Version: ${escapeHtml(product.version || "1.0")}</p>
         ${product.hasUpdate ? `<p class="update-badge">Update Available</p>` : ""}
-        <button type="button" disabled>
-          Download
-        </button>
+        <button type="button" onclick="downloadProduct('${escapeHtml(product.id)}')">
+  Download
+</button>
       </div>
     </article>
   `;
+}
+
+function downloadProduct(productId) {
+  window.location.href = `${API_URL}/account/download/${encodeURIComponent(productId)}`;
 }
 
 function escapeHtml(value) {
