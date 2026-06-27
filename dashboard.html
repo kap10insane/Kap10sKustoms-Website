@@ -178,5 +178,46 @@
   </main>
 
   <script src="dashboard.js"></script>
+
+<div id="categoryModal" class="modal hidden">
+  <div class="modal-content">
+
+    <h2 id="categoryModalTitle">New Category</h2>
+
+    <label>Name</label>
+    <input
+      id="categoryName"
+      type="text"
+      placeholder="ATS Skins">
+
+    <label>Slug</label>
+    <input
+      id="categorySlug"
+      type="text"
+      placeholder="ats-skins">
+
+    <label>Sort Order</label>
+    <input
+      id="categorySortOrder"
+      type="number"
+      value="0">
+
+    <div class="modal-actions">
+      <button
+        id="saveCategoryBtn"
+        class="btn primary">
+        Save
+      </button>
+
+      <button
+        id="cancelCategoryBtn"
+        class="btn">
+        Cancel
+      </button>
+    </div>
+
+  </div>
+</div>
+
 </body>
 </html>
