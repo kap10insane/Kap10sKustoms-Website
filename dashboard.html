@@ -181,41 +181,45 @@
 
 <div id="categoryModal" class="modal hidden">
   <div class="modal-content">
+    <div class="modal-header">
+      <div>
+        <h2 id="categoryModalTitle">New Category</h2>
+        <p>Create or edit a store category.</p>
+      </div>
 
-    <h2 id="categoryModalTitle">New Category</h2>
-
-    <label>Name</label>
-    <input
-      id="categoryName"
-      type="text"
-      placeholder="ATS Skins">
-
-    <label>Slug</label>
-    <input
-      id="categorySlug"
-      type="text"
-      placeholder="ats-skins">
-
-    <label>Sort Order</label>
-    <input
-      id="categorySortOrder"
-      type="number"
-      value="0">
-
-    <div class="modal-actions">
-      <button
-        id="saveCategoryBtn"
-        class="btn primary">
-        Save
-      </button>
-
-      <button
-        id="cancelCategoryBtn"
-        class="btn">
-        Cancel
+      <button class="modal-close" type="button" id="closeCategoryModalBtn">
+        ×
       </button>
     </div>
 
+    <div class="modal-body">
+      <form class="modal-form" id="categoryForm">
+        <div class="modal-field">
+          <label for="categoryName">Name</label>
+          <input id="categoryName" type="text" placeholder="ATS Skins">
+        </div>
+
+        <div class="modal-field">
+          <label for="categorySlug">Slug</label>
+          <input id="categorySlug" type="text" placeholder="ats-skins">
+        </div>
+
+        <div class="modal-field">
+          <label for="categorySortOrder">Sort Order</label>
+          <input id="categorySortOrder" type="number" value="0">
+        </div>
+      </form>
+    </div>
+
+    <div class="modal-footer">
+      <button id="cancelCategoryBtn" class="btn secondary" type="button">
+        Cancel
+      </button>
+
+      <button id="saveCategoryBtn" class="btn primary" type="button">
+        Save Category
+      </button>
+    </div>
   </div>
 </div>
 
