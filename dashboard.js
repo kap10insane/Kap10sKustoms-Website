@@ -21,14 +21,16 @@ async function loadDashboardProducts() {
       throw new Error("Invalid product response");
     }
 
-    dashboardProductsCache = data.products;
+    const visibleProducts = data.products.filter((product) => product.active);
 
-    if (!data.products.length) {
+dashboardProductsCache = visibleProducts;
+
+if (!visibleProducts.length) {
       el.innerHTML = "<p>No products found.</p>";
       return;
     }
 
-    el.innerHTML = data.products.map((product) => `
+    el.innerHTML = visibleProducts.map((product) => `
       <article class="dashboard-product-row">
         <div>
           <h3>${product.name}</h3>
