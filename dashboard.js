@@ -257,4 +257,11 @@ document.querySelectorAll(".product-filter-btn").forEach((btn) => {
 loadDashboardProducts();
 });
 
+document.querySelectorAll(".product-filter-btn").forEach((btn) => {
+  btn.classList.toggle(
+    "active",
+    btn.dataset.filter === dashboardProductFilter
+  );
+});
+
 loadDashboardProducts();
