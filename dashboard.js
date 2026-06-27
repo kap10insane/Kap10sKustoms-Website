@@ -218,6 +218,7 @@ document.addEventListener("click", async (event) => {
       throw new Error(data.error || "Delete failed.");
     }
 
+    alert(`Deleted/hidden "${productId}" successfully.`);
     await loadDashboardProducts();
 
   } catch (err) {
