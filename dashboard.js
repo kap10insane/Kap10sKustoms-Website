@@ -30,6 +30,13 @@ async function loadDashboardProducts() {
 
 dashboardProductsCache = visibleProducts;
 
+document.querySelectorAll(".product-filter-btn").forEach((btn) => {
+  btn.classList.toggle(
+    "active",
+    btn.dataset.filter === dashboardProductFilter
+  );
+});
+
 if (!visibleProducts.length) {
       el.innerHTML = "<p>No products found.</p>";
       return;
