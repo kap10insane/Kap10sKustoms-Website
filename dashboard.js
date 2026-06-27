@@ -6,8 +6,10 @@ const newBtn = document.getElementById("newProductBtn");
 const cancelBtn = document.getElementById("cancelProductBtn");
 const logoutBtn = document.getElementById("logoutBtn");
 let dashboardProductsCache = [];
+let dashboardCategoriesCache = [];
 let dashboardProductFilter = "active";
 let editingProductId = null;
+let editingCategoryId = null;
 
 async function loadCategories() {
   const select = document.getElementById("productCategorySelect");
@@ -24,6 +26,8 @@ async function loadCategories() {
     if (!response.ok || !data.ok) {
       throw new Error("Failed to load categories.");
     }
+
+    dashboardCategoriesCache = data.categories;
 
     select.innerHTML = data.categories
       .filter(category => category.active)
@@ -528,10 +532,27 @@ const categoryNameInput = document.getElementById("categoryName");
 const categorySlugInput = document.getElementById("categorySlug");
 const categorySortOrderInput = document.getElementById("categorySortOrder");
 
-function openCategoryModal() {
-  
-
+function openCategoryModal(category = null) {
   if (!categoryModal) return;
+
+  const title = document.getElementById("categoryModalTitle");
+
+  if (category) {
+    editingCategoryId = category.id;
+    if (title) title.textContent = "Edit Category";
+
+    categoryNameInput.value = category.name || "";
+    categorySlugInput.value = category.slug || "";
+    categorySortOrderInput.value = category.sort_order || 0;
+  } else {
+    editingCategoryId = null;
+    if (title) title.textContent = "New Category";
+
+    categoryNameInput.value = "";
+    categorySlugInput.value = "";
+    categorySortOrderInput.value = "0";
+  }
+
   categoryModal.classList.remove("hidden");
 }
 
@@ -592,6 +613,19 @@ if (closeCategoryModalBtn) {
 
 if (saveCategoryBtn) {
   saveCategoryBtn.addEventListener("click", saveCategory);
+}
+
+function editCategory(categoryId) {
+  const category = dashboardCategoriesCache.find(
+    c => c.id === categoryId
+  );
+
+  if (!category) {
+    alert("Category not found.");
+    return;
+  }
+
+  openCategoryModal(category);
 }
 
 loadCategories();
