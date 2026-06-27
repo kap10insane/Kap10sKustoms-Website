@@ -823,3 +823,19 @@ a {
     gap:15px;
     margin-top:25px;
 }
+.dashboard-product-filters{
+  display:flex;
+  gap:10px;
+  margin:18px 0;
+}
+
+.product-filter-btn.active{
+  background:#2f6fed;
+  color:#fff;
+  border-color:#2f6fed;
+}
+
+.product-filter-btn.active:hover{
+  background:#2f6fed;
+  color:#fff;
+}

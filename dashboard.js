@@ -242,7 +242,12 @@ document.addEventListener("click", (event) => {
   if (!filterBtn) return;
 
   dashboardProductFilter = filterBtn.dataset.filter;
-  loadDashboardProducts();
+
+document.querySelectorAll(".product-filter-btn").forEach((btn) => {
+  btn.classList.toggle("active", btn.dataset.filter === dashboardProductFilter);
+});
+
+loadDashboardProducts();
 });
 
 loadDashboardProducts();
