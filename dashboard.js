@@ -4,6 +4,7 @@ const API_BASE = "https://kap10skustoms-api.kap10skustoms.workers.dev";
 const form = document.getElementById("productForm");
 const newBtn = document.getElementById("newProductBtn");
 const cancelBtn = document.getElementById("cancelProductBtn");
+const logoutBtn = document.getElementById("logoutBtn");
 let dashboardProductsCache = [];
 let dashboardProductFilter = "active";
 let editingProductId = null;
@@ -267,5 +268,20 @@ document.querySelectorAll(".product-filter-btn").forEach((btn) => {
     btn.dataset.filter === dashboardProductFilter
   );
 });
+
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", async () => {
+    try {
+      await fetch(`${API_BASE}/auth/logout`, {
+        method: "POST",
+        credentials: "include"
+      });
+    } catch (err) {
+      console.error("Logout failed:", err);
+    }
+
+    window.location.href = "login.html";
+  });
+}
 
 loadDashboardProducts();
