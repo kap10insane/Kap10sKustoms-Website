@@ -519,6 +519,33 @@ document.addEventListener("click", (event) => {
   });
 });
 
+const categoryModal = document.getElementById("categoryModal");
+const newCategoryBtn = document.getElementById("newCategoryBtn");
+const cancelCategoryBtn = document.getElementById("cancelCategoryBtn");
+const closeCategoryModalBtn = document.getElementById("closeCategoryModalBtn");
+
+function openCategoryModal() {
+  if (!categoryModal) return;
+  categoryModal.classList.remove("hidden");
+}
+
+function closeCategoryModal() {
+  if (!categoryModal) return;
+  categoryModal.classList.add("hidden");
+}
+
+if (newCategoryBtn) {
+  newCategoryBtn.addEventListener("click", openCategoryModal);
+}
+
+if (cancelCategoryBtn) {
+  cancelCategoryBtn.addEventListener("click", closeCategoryModal);
+}
+
+if (closeCategoryModalBtn) {
+  closeCategoryModalBtn.addEventListener("click", closeCategoryModal);
+}
+
 loadCategories();
 loadPlatforms();
 loadPurchaseTypes();
