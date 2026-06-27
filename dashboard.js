@@ -45,6 +45,80 @@ async function loadCategories() {
   }
 }
 
+async function loadPlatforms() {
+  const select = document.getElementById("productPlatformSelect");
+
+  if (!select) return;
+
+  try {
+    const response = await fetch(`${API_BASE}/admin/platforms`, {
+      credentials: "include"
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || !data.ok) {
+      throw new Error("Failed to load platforms.");
+    }
+
+    select.innerHTML = data.platforms
+      .filter(platform => platform.active)
+      .map(platform => `
+        <option value="${platform.name}">
+          ${platform.name}
+        </option>
+      `)
+      .join("");
+
+  } catch (err) {
+    console.error(err);
+
+    select.innerHTML =
+      `<option value="">Unable to load platforms</option>`;
+  }
+}
+
+async function loadCategoryList() {
+  const el = document.getElementById("categoryList");
+  if (!el) return;
+
+  el.textContent = "Loading categories...";
+
+  try {
+    const response = await fetch(`${API_BASE}/admin/categories`, {
+      credentials: "include"
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || !data.ok) {
+      throw new Error("Failed to load category list.");
+    }
+
+    el.innerHTML = data.categories.map((category) => `
+      <article class="dashboard-product-row">
+        <div>
+          <h3>${category.name}</h3>
+          <p>${category.slug}</p>
+        </div>
+
+        <div>
+          <strong>Order ${category.sort_order}</strong>
+        </div>
+
+        <div>
+          <span class="status-pill ${category.active ? "active" : "inactive"}">
+            ${category.active ? "Active" : "Inactive"}
+          </span>
+        </div>
+      </article>
+    `).join("");
+  } catch (err) {
+    console.error(err);
+    el.innerHTML = "<p>Could not load categories.</p>";
+  }
+}
+
 async function loadDashboardProducts() {
   const el = document.getElementById("dashboardProducts");
 
@@ -339,4 +413,6 @@ document.addEventListener("click", (event) => {
 });
 
 loadCategories();
+loadPlatforms();
+loadCategoryList();
 loadDashboardProducts();
