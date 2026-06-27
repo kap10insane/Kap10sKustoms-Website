@@ -128,57 +128,58 @@ async function loadCategoryList() {
       throw new Error("Failed to load category list.");
     }
 
-    el.innerHTML = data.categories.map((category) => `
-      <article class="dashboard-product-row">
-        <div>
-          <h3>${category.name}</h3>
-          <p>${category.slug}</p>
-        </div>
+    el.innerHTML = data.categories.map((category) => {
+      const actionButton = category.active
+        ? `
+          <button
+            class="danger-button"
+            onclick="archiveCategory('${category.id}')">
+            Archive
+          </button>
+        `
+        : `
+          <button
+            class="primary-button"
+            onclick="restoreCategory('${category.id}')">
+            Restore
+          </button>
+        `;
 
-        <div>
-          <strong>Order ${category.sort_order}</strong>
-        </div>
+      return `
+        <article class="dashboard-product-row">
+          <div>
+            <h3>${category.name}</h3>
+            <p>${category.slug}</p>
+          </div>
 
-        <div>
-  <span class="status-pill ${category.active ? "active" : "inactive"}">
-    ${category.active ? "Active" : "Inactive"}
-  </span>
-</div>
+          <div>
+            <strong>Order ${category.sort_order}</strong>
+          </div>
 
-<div class="dashboard-actions">
+          <div>
+            <span class="status-pill ${category.active ? "active" : "inactive"}">
+              ${category.active ? "Active" : "Inactive"}
+            </span>
+          </div>
 
-  <button
-    class="secondary-button"
-    onclick="editCategory('${category.id}')">
-    Edit
-  </button>
+          <div class="dashboard-actions">
+            <button
+              class="secondary-button"
+              onclick="editCategory('${category.id}')">
+              Edit
+            </button>
 
-  ${
-    category.active
-      ? `
-      <button
-        class="danger-button"
-        onclick="archiveCategory('${category.id}')">
-        Archive
-      </button>
-      `
-      : `
-      <button
-        class="primary-button"
-        onclick="restoreCategory('${category.id}')">
-        Restore
-      </button>
-      `
-  }
-
-</div>
-      </article>
-    `).join("");
+            ${actionButton}
+          </div>
+        </article>
+      `;
+    }).join("");
   } catch (err) {
     console.error(err);
     el.innerHTML = "<p>Could not load categories.</p>";
   }
 }
+  
 
 async function loadDashboardProducts() {
   const el = document.getElementById("dashboardProducts");
