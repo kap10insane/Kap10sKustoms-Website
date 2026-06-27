@@ -523,6 +523,10 @@ const categoryModal = document.getElementById("categoryModal");
 const newCategoryBtn = document.getElementById("newCategoryBtn");
 const cancelCategoryBtn = document.getElementById("cancelCategoryBtn");
 const closeCategoryModalBtn = document.getElementById("closeCategoryModalBtn");
+const saveCategoryBtn = document.getElementById("saveCategoryBtn");
+const categoryNameInput = document.getElementById("categoryName");
+const categorySlugInput = document.getElementById("categorySlug");
+const categorySortOrderInput = document.getElementById("categorySortOrder");
 
 function openCategoryModal() {
   
@@ -536,6 +540,44 @@ function closeCategoryModal() {
   categoryModal.classList.add("hidden");
 }
 
+async function saveCategory() {
+  const category = {
+    name: categoryNameInput.value.trim(),
+    slug: categorySlugInput.value.trim(),
+    sort_order: Number(categorySortOrderInput.value || 0)
+  };
+
+  if (!category.name || !category.slug) {
+    alert("Category name and slug are required.");
+    return;
+  }
+
+  const response = await fetch(`${API_BASE}/admin/categories`, {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(category)
+  });
+
+  const data = await response.json();
+
+  if (!response.ok || !data.ok) {
+    alert(data.error || "Unable to save category.");
+    return;
+  }
+
+  categoryNameInput.value = "";
+  categorySlugInput.value = "";
+  categorySortOrderInput.value = "0";
+
+  closeCategoryModal();
+
+  await loadCategoryList();
+  await loadCategories();
+}
+
 if (newCategoryBtn) {
   newCategoryBtn.addEventListener("click", openCategoryModal);
 }
@@ -546,6 +588,10 @@ if (cancelCategoryBtn) {
 
 if (closeCategoryModalBtn) {
   closeCategoryModalBtn.addEventListener("click", closeCategoryModal);
+}
+
+if (saveCategoryBtn) {
+  saveCategoryBtn.addEventListener("click", saveCategory);
 }
 
 loadCategories();
