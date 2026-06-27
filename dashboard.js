@@ -9,6 +9,42 @@ let dashboardProductsCache = [];
 let dashboardProductFilter = "active";
 let editingProductId = null;
 
+async function loadCategories() {
+  const select = document.getElementById("productCategorySelect");
+
+  if (!select) return;
+
+  try {
+    const response = await fetch(`${API_BASE}/admin/categories`, {
+      credentials: "include"
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || !data.ok) {
+      throw new Error("Failed to load categories.");
+    }
+
+    select.innerHTML = data.categories
+      .filter(category => category.active)
+      .map(category => `
+        <option value="${category.name}">
+          ${category.name}
+        </option>
+      `)
+      .join("");
+
+  } catch (err) {
+    console.error(err);
+
+    select.innerHTML = `
+      <option value="">
+        Unable to load categories
+      </option>
+    `;
+  }
+}
+
 async function loadDashboardProducts() {
   const el = document.getElementById("dashboardProducts");
 
@@ -284,4 +320,5 @@ if (logoutBtn) {
   });
 }
 
+loadCategories();
 loadDashboardProducts();
