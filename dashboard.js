@@ -525,7 +525,7 @@ const cancelCategoryBtn = document.getElementById("cancelCategoryBtn");
 const closeCategoryModalBtn = document.getElementById("closeCategoryModalBtn");
 
 function openCategoryModal() {
-  console.log("New Category clicked", categoryModal);
+  
 
   if (!categoryModal) return;
   categoryModal.classList.remove("hidden");
