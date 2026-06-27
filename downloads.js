@@ -46,7 +46,7 @@ function renderDownloadCard(product) {
         <p>Version: ${escapeHtml(product.version || "1.0")}</p>
         ${product.hasUpdate ? `<p class="update-badge">Update Available</p>` : ""}
         <button type="button" disabled>
-          Download Coming Next
+          Download
         </button>
       </div>
     </article>
