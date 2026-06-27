@@ -237,4 +237,12 @@ document.addEventListener("click", async (event) => {
   }
 });
 
+document.addEventListener("click", (event) => {
+  const filterBtn = event.target.closest(".product-filter-btn");
+  if (!filterBtn) return;
+
+  dashboardProductFilter = filterBtn.dataset.filter;
+  loadDashboardProducts();
+});
+
 loadDashboardProducts();
