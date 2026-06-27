@@ -132,14 +132,14 @@ async function loadCategoryList() {
       const actionButton = category.active
         ? `
           <button
-            class="danger-button"
+            class="dashboard-button danger"
             onclick="archiveCategory('${category.id}')">
             Archive
           </button>
         `
         : `
           <button
-            class="primary-button"
+            class="dashboard-button"
             onclick="restoreCategory('${category.id}')">
             Restore
           </button>
@@ -164,7 +164,7 @@ async function loadCategoryList() {
 
           <div class="dashboard-actions">
             <button
-              class="secondary-button"
+              class="dashboard-button secondary"
               onclick="editCategory('${category.id}')">
               Edit
             </button>
