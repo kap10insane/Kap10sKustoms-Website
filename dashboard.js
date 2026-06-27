@@ -573,8 +573,14 @@ async function saveCategory() {
     return;
   }
 
-  const response = await fetch(`${API_BASE}/admin/categories`, {
-    method: "POST",
+  const url = editingCategoryId
+  ? `${API_BASE}/admin/categories/${encodeURIComponent(editingCategoryId)}`
+  : `${API_BASE}/admin/categories`;
+
+const method = editingCategoryId ? "PUT" : "POST";
+
+const response = await fetch(url, {
+  method,
     credentials: "include",
     headers: {
       "Content-Type": "application/json"
