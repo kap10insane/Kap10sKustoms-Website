@@ -47,14 +47,22 @@ async function loadDashboardProducts() {
         </div>
 
         <div class="dashboard-row-actions">
-          <button
-  type="button"
-  class="btn secondary edit-product-btn"
-  data-product-id="${product.id}"
->
-  Edit
-</button>
-        </div>
+  <button
+    type="button"
+    class="btn secondary edit-product-btn"
+    data-product-id="${product.id}"
+  >
+    Edit
+  </button>
+
+  <button
+    type="button"
+    class="btn danger delete-product-btn"
+    data-product-id="${product.id}"
+  >
+    Delete
+  </button>
+</div>
       </article>
     `).join("");
   } catch (err) {
@@ -182,6 +190,40 @@ form.active.checked = !!product.active;
     behavior: "smooth",
     block: "start"
   });
+});
+
+document.addEventListener("click", async (event) => {
+  const deleteBtn = event.target.closest(".delete-product-btn");
+  if (!deleteBtn) return;
+
+  const productId = deleteBtn.dataset.productId;
+
+  const confirmed = confirm(
+    `Hide "${productId}" from the store?\n\nThis can be restored later.`
+  );
+
+  if (!confirmed) return;
+
+  try {
+    const response = await fetch(
+      `${API_BASE}/admin/products/${encodeURIComponent(productId)}`,
+      {
+        method: "DELETE"
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok || !data.ok) {
+      throw new Error(data.error || "Delete failed.");
+    }
+
+    await loadDashboardProducts();
+
+  } catch (err) {
+    console.error(err);
+    alert(err.message);
+  }
 });
 
 loadDashboardProducts();
