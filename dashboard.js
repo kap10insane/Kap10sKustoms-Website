@@ -16,7 +16,9 @@ async function loadDashboardProducts() {
   el.textContent = "Loading products...";
 
   try {
-    const response = await fetch(`${API_BASE}/admin/products`);
+    const response = await fetch(`${API_BASE}/admin/products`, {
+  credentials: "include"
+});
     const data = await response.json();
 
     if (!data.ok || !Array.isArray(data.products)) {
@@ -147,11 +149,12 @@ console.log("Saving product", {
 
 const response = await fetch(url, {
   method,
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(product)
-      });
+  credentials: "include",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify(product)
+});
 
       const data = await response.json();
 
@@ -226,8 +229,9 @@ document.addEventListener("click", async (event) => {
     const response = await fetch(
       `${API_BASE}/admin/products/${encodeURIComponent(productId)}`,
       {
-        method: "DELETE"
-      }
+  method: "DELETE",
+  credentials: "include"
+}
     );
 
     const data = await response.json();
