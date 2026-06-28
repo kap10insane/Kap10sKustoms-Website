@@ -120,20 +120,51 @@
           <input name="version" type="text" placeholder="1.55+">
         </label>
 
-        <label>
-          Truck Folder
-          <input name="truck_folder" type="text" placeholder="Pizzster389">
-        </label>
+       <input name="truck_folder" type="hidden">
+<input name="image_folder" type="hidden">
+<input name="download_file" type="hidden">
 
-        <label>
-          Product Image Folder
-          <input name="image_folder" type="text" placeholder="Blue collar">
-        </label>
+<div class="upload-section">
+  <h3>Product Images</h3>
+  <p>Upload the 4 standard product images.</p>
 
-        <label>
-          Download File
-          <input name="download_file" type="text" placeholder="ats/skins/Pizzster 389/Blue Collar.scs">
-        </label>
+  <div class="upload-grid">
+    <label class="upload-box">
+      Hero Image
+      <input type="file" id="heroImageUpload" accept="image/*">
+      <span>Upload hero image</span>
+    </label>
+
+    <label class="upload-box">
+      Rear Image
+      <input type="file" id="rearImageUpload" accept="image/*">
+      <span>Upload rear image</span>
+    </label>
+
+    <label class="upload-box">
+      Driver Side
+      <input type="file" id="driverImageUpload" accept="image/*">
+      <span>Upload driver side image</span>
+    </label>
+
+    <label class="upload-box">
+      Passenger Side
+      <input type="file" id="passengerImageUpload" accept="image/*">
+      <span>Upload passenger side image</span>
+    </label>
+  </div>
+</div>
+
+<div class="upload-section">
+  <h3>Download File</h3>
+  <p>Upload the finished mod package. Use .scs or .zip for now.</p>
+
+  <label class="upload-box wide">
+    Mod / Download File
+    <input type="file" id="downloadFileUpload" accept=".scs,.zip">
+    <span>Upload .scs or .zip file</span>
+  </label>
+</div>
 
         <label>
           Description
