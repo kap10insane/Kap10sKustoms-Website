@@ -609,6 +609,14 @@ const saveCategoryBtn = document.getElementById("saveCategoryBtn");
 const categoryNameInput = document.getElementById("categoryName");
 const categorySlugInput = document.getElementById("categorySlug");
 const categorySortOrderInput = document.getElementById("categorySortOrder");
+const platformModal = document.getElementById("platformModal");
+const newPlatformBtn = document.getElementById("newPlatformBtn");
+const cancelPlatformBtn = document.getElementById("cancelPlatformBtn");
+const closePlatformModalBtn = document.getElementById("closePlatformModalBtn");
+const savePlatformBtn = document.getElementById("savePlatformBtn");
+const platformNameInput = document.getElementById("platformName");
+const platformSlugInput = document.getElementById("platformSlug");
+const platformSortOrderInput = document.getElementById("platformSortOrder");
 
 function openCategoryModal(category = null) {
   if (!categoryModal) return;
@@ -637,6 +645,35 @@ function openCategoryModal(category = null) {
 function closeCategoryModal() {
   if (!categoryModal) return;
   categoryModal.classList.add("hidden");
+}
+
+function openPlatformModal(platform = null) {
+  if (!platformModal) return;
+
+  const title = document.getElementById("platformModalTitle");
+
+  if (platform) {
+    editingPlatformId = platform.id;
+    if (title) title.textContent = "Edit Platform";
+
+    platformNameInput.value = platform.name || "";
+    platformSlugInput.value = platform.slug || "";
+    platformSortOrderInput.value = platform.sort_order || 0;
+  } else {
+    editingPlatformId = null;
+    if (title) title.textContent = "New Platform";
+
+    platformNameInput.value = "";
+    platformSlugInput.value = "";
+    platformSortOrderInput.value = "0";
+  }
+
+  platformModal.classList.remove("hidden");
+}
+
+function closePlatformModal() {
+  if (!platformModal) return;
+  platformModal.classList.add("hidden");
 }
 
 async function saveCategory() {
@@ -697,6 +734,28 @@ if (closeCategoryModalBtn) {
 
 if (saveCategoryBtn) {
   saveCategoryBtn.addEventListener("click", saveCategory);
+}
+
+if (newPlatformBtn) {
+  newPlatformBtn.addEventListener("click", () => {
+    openPlatformModal();
+  });
+}
+
+if (cancelPlatformBtn) {
+  cancelPlatformBtn.addEventListener("click", closePlatformModal);
+}
+
+if (closePlatformModalBtn) {
+  closePlatformModalBtn.addEventListener("click", closePlatformModal);
+}
+
+if (platformModal) {
+  platformModal.addEventListener("click", (event) => {
+    if (event.target === platformModal) {
+      closePlatformModal();
+    }
+  });
 }
 
 function editCategory(categoryId) {
