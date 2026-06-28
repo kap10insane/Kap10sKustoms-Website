@@ -866,6 +866,67 @@ if (productSearchInput) {
   });
 }
 
+async function uploadProductImage(productId, file, type = "hero") {
+  const formData = new FormData();
+
+  formData.append("image", file);
+  formData.append("type", type);
+
+  const response = await fetch(
+    `${API_BASE}/admin/products/${encodeURIComponent(productId)}/images`,
+    {
+      method: "POST",
+      credentials: "include",
+      body: formData
+    }
+  );
+
+  const data = await response.json();
+
+  if (!response.ok || !data.ok) {
+    throw new Error(data.error || "Image upload failed.");
+  }
+
+  return data;
+}
+
+const heroUpload = document.getElementById("heroImageUpload");
+
+if (heroUpload) {
+  heroUpload.addEventListener("change", async (event) => {
+
+    if (!editingProductId) {
+      alert("Please select a product first.");
+      return;
+    }
+
+    const file = event.target.files[0];
+
+    if (!file) return;
+
+    try {
+
+      const result = await uploadProductImage(
+        editingProductId,
+        file,
+        "hero"
+      );
+
+      alert(`Uploaded: ${result.filename}`);
+
+      console.log(result);
+
+    } catch (err) {
+
+      console.error(err);
+
+      alert(err.message);
+
+    }
+
+  });
+}
+
 loadCategories();
 loadPlatforms();
 loadCategoryList();
