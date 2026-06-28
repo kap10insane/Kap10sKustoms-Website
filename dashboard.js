@@ -394,21 +394,71 @@ async function loadDashboardProducts() {
   }
 }
 
+function renderProductEditor(product) {
+  const panel = document.getElementById("productEditorPanel");
+  if (!panel || !form) return;
+
+  editingProductId = product ? product.id : null;
+
+  panel.innerHTML = "";
+
+  panel.appendChild(form);
+
+  form.classList.remove("hidden");
+  form.style.display = "block";
+
+  if (product) {
+    form.querySelector("h2").textContent = product.name || "Product Details";
+
+    form.id.value = product.id || "";
+    form.name.value = product.name || "";
+    form.slug.value = product.slug || "";
+    form.category.value = product.category || "";
+    form.platform.value = product.platform || "";
+    form.price.value = product.price || 0;
+    form.version.value = product.version || "";
+    form.truck_folder.value = product.truck_folder || "";
+    form.image_folder.value = product.image_folder || "";
+    form.download_file.value = product.download_file || "";
+    form.description.value = product.description || "";
+    form.active.checked = !!product.active;
+  } else {
+    form.querySelector("h2").textContent = "New Product";
+    form.reset();
+    form.active.checked = true;
+  }
+}
+
 if (form && newBtn && cancelBtn) {
   form.style.display = "none";
 
   newBtn.addEventListener("click", () => {
-    form.style.display = "block";
-    form.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    });
+  document.querySelectorAll(".product-list-item").forEach((row) => {
+    row.classList.remove("selected");
   });
 
+  renderProductEditor(null);
+});
+
   cancelBtn.addEventListener("click", () => {
-    form.reset();
-    form.style.display = "none";
+  editingProductId = null;
+  form.reset();
+  form.style.display = "none";
+
+  const panel = document.getElementById("productEditorPanel");
+  if (panel) {
+    panel.innerHTML = `
+      <div class="product-editor-empty">
+        <h2>Select a product</h2>
+        <p>Choose a product from the list on the left or create a new one.</p>
+      </div>
+    `;
+  }
+
+  document.querySelectorAll(".product-list-item").forEach((row) => {
+    row.classList.remove("selected");
   });
+});
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -489,37 +539,20 @@ const response = await fetch(url, {
 }
 
 document.addEventListener("click", (event) => {
-  const editButton = event.target.closest(".edit-product-btn");
-  if (!editButton) return;
+  const item = event.target.closest(".product-list-item");
+  if (!item) return;
 
   const product = dashboardProductsCache.find(
-    p => p.id === editButton.dataset.productId
+    p => p.id === item.dataset.productId
   );
 
   if (!product) return;
 
-  editingProductId = product.id;
-
-form.id.value = product.id;
-form.name.value = product.name || "";
-form.slug.value = product.slug || "";
-form.category.value = product.category || "";
-form.platform.value = product.platform || "";
-form.purchase_type.value = product.purchase_type || "";
-form.price.value = product.price || 0;
-form.version.value = product.version || "";
-form.truck_folder.value = product.truck_folder || "";
-form.image_folder.value = product.image_folder || "";
-form.download_file.value = product.download_file || "";
-form.description.value = product.description || "";
-form.active.checked = !!product.active;
-
-  form.style.display = "block";
-
-  form.scrollIntoView({
-    behavior: "smooth",
-    block: "start"
+  document.querySelectorAll(".product-list-item").forEach((row) => {
+    row.classList.toggle("selected", row === item);
   });
+
+  renderProductEditor(product);
 });
 
 document.addEventListener("click", async (event) => {

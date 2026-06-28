@@ -1298,3 +1298,81 @@ button[data-dashboard-tab].active{
 .status-archived{
   color:#ffb35c;
 }
+
+/* ==========================================================
+   PRODUCT MANAGER POLISH PASS
+========================================================== */
+
+.product-manager{
+  grid-template-columns:420px 1fr;
+}
+
+.product-manager-sidebar{
+  gap:14px;
+  padding:18px;
+}
+
+.product-manager-sidebar-header{
+  align-items:center;
+}
+
+.product-manager-sidebar-header p{
+  display:none;
+}
+
+.product-manager-sidebar-header .btn{
+  padding:12px 18px;
+  white-space:nowrap;
+}
+
+.product-manager-sidebar .dashboard-product-filters{
+  order:3;
+  margin:0;
+}
+
+.product-manager-sidebar .product-search-input{
+  order:2;
+}
+
+.product-manager-sidebar .product-list{
+  order:4;
+}
+
+.product-manager-sidebar .dashboard-product-filters{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:10px;
+}
+
+.product-manager-sidebar .dashboard-product-filters .btn{
+  padding:11px 8px;
+}
+
+.product-list-item{
+  grid-template-columns:70px 1fr auto;
+  gap:14px;
+  padding:12px 14px;
+}
+
+.product-list-thumb{
+  width:70px;
+  height:70px;
+}
+
+.product-list-main strong{
+  font-size:1.02rem;
+}
+
+.product-list-main span,
+.product-list-main small{
+  line-height:1.25;
+}
+
+.product-list-meta{
+  min-width:62px;
+}
+
+.product-list-item.selected{
+  border-color:#2d7dff;
+  background:#13243a;
+}
