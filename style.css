@@ -1432,3 +1432,31 @@ button[data-dashboard-tab].active{
 .upload-box.wide{
   width:100%;
 }
+
+.upload-box.uploaded{
+  min-height:140px;
+  border-color:#2d7dff;
+}
+
+.upload-box.uploaded span{
+  color:#fff;
+  font-weight:700;
+  text-shadow:0 2px 8px rgba(0,0,0,.8);
+}
+
+#galleryPreviewList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.gallery-preview-thumb {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 12px;
+  background-size: cover;
+  background-position: center;
+  border: 1px solid rgba(255,255,255,.14);
+  background-color: rgba(255,255,255,.05);
+}

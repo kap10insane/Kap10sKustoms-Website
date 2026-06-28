@@ -126,7 +126,7 @@
 
 <div class="upload-section">
   <h3>Product Images</h3>
-  <p>Upload the 4 standard product images.</p>
+  <p>Upload a Hero Image and any number of Gallery Images.</p>
 
   <div class="upload-grid">
     <label class="upload-box">
@@ -136,23 +136,18 @@
     </label>
 
     <label class="upload-box">
-      Rear Image
-      <input type="file" id="rearImageUpload" accept="image/*">
-      <span>Upload rear image</span>
-    </label>
-
-    <label class="upload-box">
-      Driver Side
-      <input type="file" id="driverImageUpload" accept="image/*">
-      <span>Upload driver side image</span>
-    </label>
-
-    <label class="upload-box">
-      Passenger Side
-      <input type="file" id="passengerImageUpload" accept="image/*">
-      <span>Upload passenger side image</span>
+      Gallery Images
+      <input
+        type="file"
+        id="galleryImageUpload"
+        accept="image/*"
+        multiple
+      >
+      <span>Upload one or more gallery images</span>
     </label>
   </div>
+
+  <div id="galleryPreviewList"></div>
 </div>
 
 <div class="upload-section">

@@ -370,7 +370,11 @@ async function loadDashboardProducts() {
         data-product-id="${product.id}"
       >
         <div class="product-list-thumb">
-          ${product.image ? `<img src="${product.image}" alt="">` : "📦"}
+          ${
+  product.image && product.image.startsWith("http")
+    ? `<img src="${product.image}" alt="">`
+    : "📦"
+}
         </div>
 
         <div class="product-list-main">
@@ -400,6 +404,8 @@ function renderProductEditor(product) {
 
   editingProductId = product ? product.id : null;
 
+  resetUploadPreviews();
+
   panel.innerHTML = "";
 
   panel.appendChild(form);
@@ -421,7 +427,13 @@ function renderProductEditor(product) {
     form.image_folder.value = product.image_folder || "";
     form.download_file.value = product.download_file || "";
     form.description.value = product.description || "";
-    form.active.checked = !!product.active;
+        form.active.checked = !!product.active;
+
+    loadProductImages(product.id)
+      .then(renderLoadedProductImages)
+      .catch((err) => {
+        console.error(err);
+      });
   } else {
     form.querySelector("h2").textContent = "New Product";
     form.reset();
@@ -479,14 +491,14 @@ const product = {
   slug: formData.get("slug"),
   category: formData.get("category"),
 platform: formData.get("platform"),
-purchase_type: formData.get("purchase_type"),
+purchase_type: "",
 price: Number(formData.get("price") || 0),
   version: formData.get("version"),
   image: imagePath,
   truck_folder: truckFolder,
   image_folder: imageFolder,
   gallery: JSON.stringify(["hero.jpg", "rear.jpg", "drv.jpg", "pass.jpg"]),
-  download_file: formData.get("download_file"),
+  download_file: "",
   description: formData.get("description"),
   active: formData.get("active") === "on"
 };
@@ -866,6 +878,112 @@ if (productSearchInput) {
   });
 }
 
+function resetUploadPreviews() {
+  const heroBox = document.getElementById("heroImageUpload")?.closest(".upload-box");
+  const galleryPreviewList = document.getElementById("galleryPreviewList");
+  const downloadBox = document.getElementById("downloadFileUpload")?.closest(".upload-box");
+
+  if (heroBox) {
+    heroBox.classList.remove("uploaded");
+    heroBox.style.backgroundImage = "";
+    heroBox.style.backgroundSize = "";
+    heroBox.style.backgroundPosition = "";
+
+    const span = heroBox.querySelector("span");
+    if (span) {
+      span.textContent = "Upload hero image";
+    }
+  }
+
+  if (galleryPreviewList) {
+    galleryPreviewList.innerHTML = "";
+  }
+
+  if (downloadBox) {
+    downloadBox.classList.remove("uploaded");
+
+    const span = downloadBox.querySelector("span");
+    if (span) {
+      span.textContent = "Upload .scs or .zip file";
+    }
+  }
+}
+
+function renderLoadedProductImages(images = []) {
+  const heroBox = document.getElementById("heroImageUpload")?.closest(".upload-box");
+  const galleryPreviewList = document.getElementById("galleryPreviewList");
+
+  if (galleryPreviewList) {
+    galleryPreviewList.innerHTML = "";
+  }
+
+  const heroImage = images.find((image) => image.type === "hero");
+  const galleryImages = images.filter((image) => image.type === "gallery");
+
+  if (heroBox && heroImage?.url) {
+    heroBox.classList.add("uploaded");
+    heroBox.style.backgroundImage = `linear-gradient(rgba(0,0,0,.35), rgba(0,0,0,.65)), url("${heroImage.url}")`;
+    heroBox.style.backgroundSize = "cover";
+    heroBox.style.backgroundPosition = "center";
+
+    const span = heroBox.querySelector("span");
+    if (span) {
+      span.textContent = `Uploaded: ${heroImage.filename}`;
+    }
+  }
+
+  if (galleryPreviewList) {
+    galleryImages.forEach((image) => {
+      if (!image.url) return;
+
+      const thumb = document.createElement("div");
+      thumb.className = "gallery-preview-thumb";
+      thumb.style.backgroundImage = `url("${image.url}")`;
+      galleryPreviewList.appendChild(thumb);
+    });
+  }
+}
+
+async function loadProductImages(productId) {
+  const response = await fetch(
+    `${API_BASE}/admin/products/${encodeURIComponent(productId)}/images`,
+    {
+      credentials: "include"
+    }
+  );
+
+  const data = await response.json();
+
+  if (!response.ok || !data.ok) {
+    throw new Error(data.error || "Failed to load product images.");
+  }
+
+  return data.images || [];
+}
+
+async function uploadProductDownload(productId, file) {
+  const formData = new FormData();
+
+  formData.append("file", file);
+
+  const response = await fetch(
+    `${API_BASE}/admin/products/${encodeURIComponent(productId)}/downloads`,
+    {
+      method: "POST",
+      credentials: "include",
+      body: formData
+    }
+  );
+
+  const data = await response.json();
+
+  if (!response.ok || !data.ok) {
+    throw new Error(data.error || "Download upload failed.");
+  }
+
+  return data;
+}
+
 async function uploadProductImage(productId, file, type = "hero") {
   const formData = new FormData();
 
@@ -890,6 +1008,50 @@ async function uploadProductImage(productId, file, type = "hero") {
   return data;
 }
 
+const downloadFileUpload = document.getElementById("downloadFileUpload");
+
+if (downloadFileUpload) {
+  downloadFileUpload.addEventListener("change", async (event) => {
+
+    if (!editingProductId) {
+      alert("Please select a product first.");
+      return;
+    }
+
+    const file = event.target.files[0];
+
+    if (!file) return;
+
+    try {
+
+      const result = await uploadProductDownload(editingProductId, file);
+
+      const box = event.target.closest(".upload-box");
+
+      if (box) {
+        box.classList.add("uploaded");
+
+        const span = box.querySelector("span");
+        if (span) {
+          span.textContent = `Uploaded: ${result.filename}`;
+        }
+      }
+
+      console.log(result);
+
+    } catch (err) {
+
+      console.error(err);
+
+      alert(err.message);
+
+    }
+
+    event.target.value = "";
+
+  });
+}
+
 const heroUpload = document.getElementById("heroImageUpload");
 
 if (heroUpload) {
@@ -912,9 +1074,21 @@ if (heroUpload) {
         "hero"
       );
 
-      alert(`Uploaded: ${result.filename}`);
+      const box = event.target.closest(".upload-box");
 
-      console.log(result);
+if (box && result.url) {
+  box.classList.add("uploaded");
+  box.style.backgroundImage = `linear-gradient(rgba(0,0,0,.35), rgba(0,0,0,.65)), url("${result.url}")`;
+  box.style.backgroundSize = "cover";
+  box.style.backgroundPosition = "center";
+
+  const span = box.querySelector("span");
+  if (span) {
+    span.textContent = `Uploaded: ${result.filename}`;
+  }
+}
+
+console.log(result);
 
     } catch (err) {
 
@@ -923,6 +1097,57 @@ if (heroUpload) {
       alert(err.message);
 
     }
+
+    });
+}
+
+const galleryUpload = document.getElementById("galleryImageUpload");
+const galleryPreviewList = document.getElementById("galleryPreviewList");
+
+if (galleryUpload) {
+  galleryUpload.addEventListener("change", async (event) => {
+
+    if (!editingProductId) {
+      alert("Please select a product first.");
+      return;
+    }
+
+    const files = Array.from(event.target.files || []);
+
+if (!files.length) return;
+
+if (galleryPreviewList) {
+  galleryPreviewList.innerHTML = "";
+}
+
+for (const file of files) {
+      try {
+
+        const result = await uploadProductImage(
+          editingProductId,
+          file,
+          "gallery"
+        );
+
+        if (galleryPreviewList && result.url) {
+          const thumb = document.createElement("div");
+          thumb.className = "gallery-preview-thumb";
+          thumb.style.backgroundImage = `url("${result.url}")`;
+          galleryPreviewList.appendChild(thumb);
+        }
+
+        console.log(result);
+
+      } catch (err) {
+
+        console.error(err);
+
+        alert(err.message);
+
+      }
+    }
+
+    event.target.value = "";
 
   });
 }
