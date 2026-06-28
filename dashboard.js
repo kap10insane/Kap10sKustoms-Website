@@ -434,6 +434,11 @@ function renderProductEditor(product) {
       .catch((err) => {
         console.error(err);
       });
+          loadProductDownload(product.id)
+      .then(renderLoadedProductDownload)
+      .catch((err) => {
+        console.error(err);
+      });
   } else {
     form.querySelector("h2").textContent = "New Product";
     form.reset();
@@ -944,6 +949,19 @@ function renderLoadedProductImages(images = []) {
   }
 }
 
+function renderLoadedProductDownload(download) {
+  const downloadBox = document.getElementById("downloadFileUpload")?.closest(".upload-box");
+
+  if (!downloadBox || !download) return;
+
+  downloadBox.classList.add("uploaded");
+
+  const span = downloadBox.querySelector("span");
+  if (span) {
+    span.textContent = `Uploaded: ${download.filename}`;
+  }
+}
+
 async function loadProductImages(productId) {
   const response = await fetch(
     `${API_BASE}/admin/products/${encodeURIComponent(productId)}/images`,
@@ -959,6 +977,23 @@ async function loadProductImages(productId) {
   }
 
   return data.images || [];
+}
+
+async function loadProductDownload(productId) {
+  const response = await fetch(
+    `${API_BASE}/admin/products/${encodeURIComponent(productId)}/downloads`,
+    {
+      credentials: "include"
+    }
+  );
+
+  const data = await response.json();
+
+  if (!response.ok || !data.ok) {
+    throw new Error(data.error || "Failed to load product download.");
+  }
+
+  return data.download || null;
 }
 
 async function uploadProductDownload(productId, file) {
