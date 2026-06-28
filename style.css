@@ -1106,7 +1106,7 @@ button[data-dashboard-tab].active{
 
 .product-manager{
     display:grid;
-    grid-template-columns:340px 1fr;
+    grid-template-columns:420px 1fr;
     gap:24px;
     align-items:start;
     min-height:700px;
@@ -1180,4 +1180,121 @@ button[data-dashboard-tab].active{
 
 .product-editor-empty p{
     max-width:400px;
+}
+
+/* Product Manager list item cleanup */
+.product-list .dashboard-product-row{
+  display:block;
+  padding:16px;
+  margin:0;
+  overflow:hidden;
+}
+
+.product-list .dashboard-product-row > div{
+  margin-bottom:10px;
+}
+
+.product-list .dashboard-product-row h3{
+  font-size:1.05rem;
+  margin:0 0 6px;
+}
+
+.product-list .dashboard-product-row p,
+.product-list .dashboard-product-row span{
+  font-size:.9rem;
+  color:rgba(255,255,255,.65);
+}
+
+.product-list .dashboard-row-actions{
+  display:flex;
+  gap:8px;
+  margin-top:12px;
+}
+
+.product-list .dashboard-row-actions .btn{
+  flex:1;
+  padding:10px 12px;
+  text-align:center;
+}
+
+.product-list{
+  overflow-x:hidden;
+}
+
+/* ==========================================================
+   PRODUCT MANAGER PRODUCT LIST
+========================================================== */
+
+.product-list-item{
+  width:100%;
+  display:grid;
+  grid-template-columns:54px 1fr auto;
+  gap:14px;
+  align-items:center;
+  padding:14px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;
+  background:#101722;
+  color:#fff;
+  text-align:left;
+  cursor:pointer;
+  transition:.18s ease;
+}
+
+.product-list-item:hover{
+  border-color:#2d7dff;
+  background:#132033;
+}
+
+.product-list-thumb{
+  width:54px;
+  height:54px;
+  border-radius:12px;
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+  background:rgba(255,255,255,.06);
+  font-size:1.4rem;
+}
+
+.product-list-thumb img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.product-list-main{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  min-width:0;
+}
+
+.product-list-main strong{
+  font-size:1rem;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.product-list-main span,
+.product-list-main small{
+  color:rgba(255,255,255,.62);
+  font-size:.85rem;
+}
+
+.product-list-meta{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  align-items:flex-end;
+  font-size:.85rem;
+}
+
+.status-active{
+  color:#57ff9a;
+}
+
+.status-archived{
+  color:#ffb35c;
 }

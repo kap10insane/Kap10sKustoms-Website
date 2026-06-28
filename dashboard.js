@@ -369,14 +369,22 @@ async function loadDashboardProducts() {
         class="product-list-item"
         data-product-id="${product.id}"
       >
-        <div>
-          <strong>${product.name}</strong>
-          <span>${product.category || "Uncategorized"}</span>
+        <div class="product-list-thumb">
+          ${product.image ? `<img src="${product.image}" alt="">` : "📦"}
         </div>
 
-        <small>
-          $${Number(product.price || 0).toFixed(2)}
-        </small>
+        <div class="product-list-main">
+          <strong>${product.name}</strong>
+          <span>${product.category || "Uncategorized"}</span>
+          <small>${product.platform || "No platform"}</small>
+        </div>
+
+        <div class="product-list-meta">
+          <strong>$${Number(product.price || 0).toFixed(2)}</strong>
+          <span class="${product.active ? "status-active" : "status-archived"}">
+            ${product.active ? "Active" : "Archived"}
+          </span>
+        </div>
       </button>
     `).join("");
 
