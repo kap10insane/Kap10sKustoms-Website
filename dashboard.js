@@ -306,6 +306,7 @@ async function restoreCategory(categoryId) {
 
 async function loadDashboardProducts() {
   const el = document.getElementById("dashboardProducts");
+  const searchInput = document.getElementById("productSearchInput");
 
   if (!el) return;
 
@@ -313,71 +314,72 @@ async function loadDashboardProducts() {
 
   try {
     const response = await fetch(`${API_BASE}/admin/products`, {
-  credentials: "include"
-});
+      credentials: "include"
+    });
+
     const data = await response.json();
 
-    if (!data.ok || !Array.isArray(data.products)) {
-      throw new Error("Invalid product response");
+    if (!response.ok || !data.ok || !Array.isArray(data.products)) {
+      throw new Error(data.error || "Invalid product response");
     }
 
-    const visibleProducts = data.products.filter((product) => {
-  if (dashboardProductFilter === "active") return product.active;
-  if (dashboardProductFilter === "archived") return !product.active;
-  return true;
-});
+    let visibleProducts = data.products.filter((product) => {
+      if (dashboardProductFilter === "active") return product.active;
+      if (dashboardProductFilter === "archived") return !product.active;
+      return true;
+    });
 
-dashboardProductsCache = visibleProducts;
+    const searchTerm = searchInput
+      ? searchInput.value.trim().toLowerCase()
+      : "";
 
-document.querySelectorAll(".product-filter-btn").forEach((btn) => {
-  btn.classList.toggle(
-    "active",
-    btn.dataset.filter === dashboardProductFilter
-  );
-});
+    if (searchTerm) {
+      visibleProducts = visibleProducts.filter((product) => {
+        return [
+          product.name,
+          product.id,
+          product.slug,
+          product.category,
+          product.platform
+        ]
+          .filter(Boolean)
+          .join(" ")
+          .toLowerCase()
+          .includes(searchTerm);
+      });
+    }
 
-if (!visibleProducts.length) {
+    dashboardProductsCache = visibleProducts;
+
+    document.querySelectorAll(".product-filter-btn").forEach((btn) => {
+      btn.classList.toggle(
+        "active",
+        btn.dataset.filter === dashboardProductFilter
+      );
+    });
+
+    if (!visibleProducts.length) {
       el.innerHTML = "<p>No products found.</p>";
       return;
     }
 
     el.innerHTML = visibleProducts.map((product) => `
-      <article class="dashboard-product-row">
+      <button
+        type="button"
+        class="product-list-item"
+        data-product-id="${product.id}"
+      >
         <div>
-          <h3>${product.name}</h3>
-          <p>${product.id}</p>
-        </div>
-
-        <div>
-          <strong>$${Number(product.price || 0).toFixed(2)}</strong>
+          <strong>${product.name}</strong>
           <span>${product.category || "Uncategorized"}</span>
         </div>
 
-        <div>
-          <span class="status-pill ${product.active ? "active" : "inactive"}">
-            ${product.active ? "Active" : "Inactive"}
-          </span>
-        </div>
-
-        <div class="dashboard-row-actions">
-  <button
-    type="button"
-    class="btn secondary edit-product-btn"
-    data-product-id="${product.id}"
-  >
-    Edit
-  </button>
-
-  <button
-    type="button"
-    class="btn danger delete-product-btn"
-    data-product-id="${product.id}"
-  >
-    Delete
-  </button>
-</div>
-      </article>
+        <small>
+          $${Number(product.price || 0).toFixed(2)}
+        </small>
+      </button>
     `).join("");
+
   } catch (err) {
     console.error(err);
     el.innerHTML = "<p>Could not load products.</p>";
@@ -815,9 +817,16 @@ function editCategory(categoryId) {
   openCategoryModal(category);
 }
 
+const productSearchInput = document.getElementById("productSearchInput");
+
+if (productSearchInput) {
+  productSearchInput.addEventListener("input", () => {
+    loadDashboardProducts();
+  });
+}
+
 loadCategories();
 loadPlatforms();
-loadPurchaseTypes();
 loadCategoryList();
 loadPlatformList();
 loadDashboardProducts();
