@@ -28,115 +28,131 @@
     Categories
   </button>
   <button type="button" class="dashboard-tab" data-dashboard-tab="platforms">
-    Platforms
-  
+  Platforms
+</button>
 </div>
 
       <section class="dashboard-panel dashboard-tab-panel active" data-dashboard-panel="products">
-        <div class="dashboard-panel-header">
-          <div>
-            <h2>Products</h2>
-            <p>Manage store products from one place.</p>
-          </div>
-
-         <button class="btn primary" type="button" id="newProductBtn">
-  + New Product
-</button>
-                </div>
-
-        <div class="dashboard-product-filters">
-          <button type="button" class="btn secondary product-filter-btn" data-filter="active">
-            Active
-          </button>
-
-          <button type="button" class="btn secondary product-filter-btn" data-filter="archived">
-            Archived
-          </button>
-
-          <button type="button" class="btn secondary product-filter-btn" data-filter="all">
-            All
-          </button>
+  <div class="product-manager">
+    <aside class="product-manager-sidebar">
+      <div class="product-manager-sidebar-header">
+        <div>
+          <h2>Products</h2>
+          <p>Manage store products.</p>
         </div>
 
-        <div id="dashboardProducts" class="dashboard-products">
-          Loading products...
+        <button class="btn primary" type="button" id="newProductBtn">
+          + New Product
+        </button>
+      </div>
+
+      <div class="dashboard-product-filters">
+        <button type="button" class="btn secondary product-filter-btn" data-filter="active">
+          Active
+        </button>
+
+        <button type="button" class="btn secondary product-filter-btn" data-filter="archived">
+          Archived
+        </button>
+
+        <button type="button" class="btn secondary product-filter-btn" data-filter="all">
+          All
+        </button>
+      </div>
+
+      <input
+        class="product-search-input"
+        type="search"
+        id="productSearchInput"
+        placeholder="Search products..."
+      >
+
+      <div id="dashboardProducts" class="product-list">
+        Loading products...
+      </div>
+    </aside>
+
+    <section class="product-editor-panel" id="productEditorPanel">
+      <div class="product-editor-empty">
+        <h2>Select a product</h2>
+        <p>Choose a product from the list on the left or create a new one.</p>
+      </div>
+
+      <form id="productForm" class="dashboard-form hidden">
+        <h2>Product Details</h2>
+
+        <label>
+          Product ID
+          <input name="id" type="text" placeholder="pizzster389-blue-collar" required>
+        </label>
+
+        <label>
+          Name
+          <input name="name" type="text" placeholder="Blue Collar" required>
+        </label>
+
+        <label>
+          Slug
+          <input name="slug" type="text" placeholder="blue-collar" required>
+        </label>
+
+        <label>
+          Category
+          <select name="category" id="productCategorySelect" required>
+            <option value="">Loading categories...</option>
+          </select>
+        </label>
+
+        <label>
+          Platform
+          <select name="platform" id="productPlatformSelect" required>
+            <option value="">Loading platforms...</option>
+          </select>
+        </label>
+
+        <label>
+          Price
+          <input name="price" type="number" step="0.01" min="0" placeholder="4.99" required>
+        </label>
+
+        <label>
+          Version
+          <input name="version" type="text" placeholder="1.55+">
+        </label>
+
+        <label>
+          Truck Folder
+          <input name="truck_folder" type="text" placeholder="Pizzster389">
+        </label>
+
+        <label>
+          Product Image Folder
+          <input name="image_folder" type="text" placeholder="Blue collar">
+        </label>
+
+        <label>
+          Download File
+          <input name="download_file" type="text" placeholder="ats/skins/Pizzster 389/Blue Collar.scs">
+        </label>
+
+        <label>
+          Description
+          <textarea name="description" rows="5" placeholder="Product description..." required></textarea>
+        </label>
+
+        <label class="checkbox-row">
+          <input name="active" type="checkbox" checked>
+          Active / Published
+        </label>
+
+        <div class="dashboard-form-actions">
+          <button class="btn primary" type="submit">Save Product</button>
+          <button class="btn secondary" type="button" id="cancelProductBtn">Cancel</button>
         </div>
-
-        <form id="productForm" class="dashboard-form hidden">
-  <h2>New Product</h2>
-
-  <label>
-    Product ID
-    <input name="id" type="text" placeholder="pizzster389-blue-collar" required>
-  </label>
-
-  <label>
-    Name
-    <input name="name" type="text" placeholder="Blue Collar" required>
-  </label>
-
-  <label>
-    Slug
-    <input name="slug" type="text" placeholder="blue-collar" required>
-  </label>
-
-  <label>
-  Category
-  <select name="category" id="productCategorySelect" required>
-    <option value="">Loading categories...</option>
-  </select>
-</label>
-
-<label>
-  Platform
-  <select name="platform" id="productPlatformSelect" required>
-    <option value="">Loading platforms...</option>
-  </select>
-</label>
-
-
-  <label>
-    Price
-    <input name="price" type="number" step="0.01" min="0" placeholder="4.99" required>
-  </label>
-
-  <label>
-    Version
-    <input name="version" type="text" placeholder="1.55+">
-  </label>
-
-  <label>
-  Truck Folder
-  <input name="truck_folder" type="text" placeholder="Pizzster389">
-</label>
-
-<label>
-  Product Image Folder
-  <input name="image_folder" type="text" placeholder="Blue collar">
-</label>
-
- <label>
-  Download File
-  <input name="download_file" type="text" placeholder="ats/skins/Pizzster 389/Blue Collar.scs">
-</label>
-
-  <label>
-    Description
-    <textarea name="description" rows="5" placeholder="Product description..." required></textarea>
-  </label>
-
-  <label class="checkbox-row">
-    <input name="active" type="checkbox" checked>
-    Active / Published
-  </label>
-
-  <div class="dashboard-form-actions">
-    <button class="btn primary" type="submit">Save Product</button>
-    <button class="btn secondary" type="button" id="cancelProductBtn">Cancel</button>
+      </form>
+    </section>
   </div>
-</form>
-
-      </section>
+</section>
 
   <section class="dashboard-panel dashboard-tab-panel" data-dashboard-panel="categories">
   <div class="dashboard-panel-header">
