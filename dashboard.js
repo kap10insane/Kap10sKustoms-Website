@@ -676,6 +676,46 @@ function closePlatformModal() {
   platformModal.classList.add("hidden");
 }
 
+async function savePlatform() {
+  const payload = {
+    name: platformNameInput.value.trim(),
+    slug: platformSlugInput.value.trim(),
+    sort_order: Number(platformSortOrderInput.value || 0),
+    active: true
+  };
+
+  try {
+    const response = await fetch(
+      editingPlatformId
+        ? `${API_BASE}/admin/platforms/${encodeURIComponent(editingPlatformId)}`
+        : `${API_BASE}/admin/platforms`,
+      {
+        method: editingPlatformId ? "PUT" : "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok || !data.ok) {
+      throw new Error(data.error || "Unable to save platform.");
+    }
+
+    closePlatformModal();
+
+    await loadPlatforms();
+    await loadPlatformList();
+
+  } catch (err) {
+    console.error(err);
+    alert(err.message);
+  }
+}
+
 async function saveCategory() {
   const category = {
     name: categoryNameInput.value.trim(),
@@ -756,6 +796,10 @@ if (platformModal) {
       closePlatformModal();
     }
   });
+}
+
+if (savePlatformBtn) {
+  savePlatformBtn.addEventListener("click", savePlatform);
 }
 
 function editCategory(categoryId) {
