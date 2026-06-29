@@ -126,10 +126,39 @@ loadRelatedProducts(session.product_id);
           throw new Error("Invalid products response");
         }
 
-        const related = products
-          .filter((product) => String(product.id) !== String(currentProductId))
-          .slice(0, 3);
+        const currentProduct = products.find(
+  (product) => String(product.id) === String(currentProductId)
+);
 
+const otherProducts = products.filter(
+  (product) => String(product.id) !== String(currentProductId)
+);
+
+const sameMaker = otherProducts.filter(
+  (product) =>
+    currentProduct &&
+    String(product.platform || "").toLowerCase() === String(currentProduct.platform || "").toLowerCase() &&
+    String(product.category || "").trim() === String(currentProduct.category || "").trim()
+);
+
+const samePlatform = otherProducts.filter(
+  (product) =>
+    currentProduct &&
+    String(product.platform || "").toLowerCase() === String(currentProduct.platform || "").toLowerCase() &&
+    !sameMaker.some((match) => String(match.id) === String(product.id))
+);
+
+const fallback = otherProducts.filter(
+  (product) =>
+    !sameMaker.some((match) => String(match.id) === String(product.id)) &&
+    !samePlatform.some((match) => String(match.id) === String(product.id))
+);
+
+const related = [
+  ...sameMaker,
+  ...samePlatform,
+  ...fallback
+].slice(0, 3);
         if (!related.length) {
           relatedEl.innerHTML = `
             <div class="related-card">
