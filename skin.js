@@ -33,11 +33,23 @@ async function getGalleryImages(product) {
 }
 
 function renderList(items) {
-  if (!Array.isArray(items) || !items.length) {
-    return "<li class='check-item'>Included with download</li>";
-  }
+  const fallbackItems = [
+    "Skin file (.scs)",
+    "Instant digital download",
+    "Future updates when available",
+    "Basic installation support"
+  ];
 
-  return items.map(item => `<li class="check-item">${item}</li>`).join("");
+  const list = String(items || "")
+    .split(/\r?\n/)
+    .map((item) => item.trim())
+    .filter(Boolean);
+
+  const finalItems = list.length ? list : fallbackItems;
+
+  return finalItems
+    .map((item) => `<li class="check-item">${item}</li>`)
+    .join("");
 }
 
 async function getProductById(productId) {
@@ -118,7 +130,7 @@ const image = galleryImages[0];
           <div class="info-block">
             <h3>Included</h3>
             <ul>
-              ${renderList(product.includes)}
+              ${renderList(product.included)}
             </ul>
           </div>
 
