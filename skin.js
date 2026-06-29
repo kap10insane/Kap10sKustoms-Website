@@ -148,10 +148,10 @@ const image = galleryImages[0];
           </a>
 
           <div class="trust-list">
-            <div>✓ Instant Digital Download</div>
-            <div>✓ Secure Checkout</div>
-            <div>✓ Support Available</div>
-          </div>
+  <div>✓ Secure Stripe Checkout</div>
+  <div>✓ Instant Download After Purchase</div>
+  <div>✓ Free Updates for This Product</div>
+</div>
         </div>
       </div>
     `;
