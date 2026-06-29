@@ -184,6 +184,22 @@ a {
   color: var(--muted);
 }
 
+.clickable-category-card {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.clickable-category-card:hover {
+  text-decoration: none;
+}
+
+.clickable-category-card .card-link {
+  margin-top: auto;
+}
+
 .split-section {
   display: grid;
   grid-template-columns: 1fr 1fr;
