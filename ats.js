@@ -104,9 +104,17 @@ async function loadProducts() {
        atsProductsCache = atsProducts;
     renderAtsProducts(grid, atsProductsCache, "all");
   } catch (err) {
-    console.error("Product load failed:", err);
-    grid.innerHTML = "<p class='loading-text'>Could not load ATS skins right now.</p>";
-  }
+  console.error("Product load failed:", err);
+
+  grid.innerHTML = `
+    <div class="loading-text">
+      <p>Could not load ATS skins right now.</p>
+      <p style="font-size: 12px; opacity: .75;">
+        ${err && err.message ? err.message : String(err)}
+      </p>
+    </div>
+  `;
+}
 }
 
 let atsProductsCache = [];
