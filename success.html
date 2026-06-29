@@ -85,41 +85,88 @@
 
      </div>
 
-    <section class="might-like">
+<section class="might-like">
 
-      <h3>You Might Also Like</h3>
+  <h3>You Might Also Like</h3>
 
-      <div class="related-products">
+  <div id="relatedProducts" class="related-products">
+    <p class="loading-text">Loading recommendations...</p>
+  </div>
 
-        <div class="related-card">
-
-          <div class="related-image">
-            🚛
-          </div>
-
-          <h4>More ATS Skins Coming Soon</h4>
-
-          <p>
-            We're hard at work creating more high-quality skins for
-            American Truck Simulator.
-          </p>
-
-          <a class="btn secondary" href="ats.html">
-            Browse ATS Store
-          </a>
-
-        </div>
-
-      </div>
-
-    </section>
+</section>
 `;
+
+loadRelatedProducts(session.product_id);
         } else {
           statusEl.textContent = "Payment was not completed.";
         }
       } catch (err) {
         console.error(err);
         statusEl.textContent = "There was a problem verifying your purchase.";
+      }
+    }
+
+        function productPrice(product) {
+      return Number(product.price || 0).toFixed(2);
+    }
+
+    function productImage(product) {
+      return product.image || product.image_url || "images/kap10-logo-round.png";
+    }
+
+    async function loadRelatedProducts(currentProductId) {
+      const relatedEl = document.getElementById("relatedProducts");
+      if (!relatedEl) return;
+
+      try {
+        const response = await fetch("https://kap10skustoms-api.kap10skustoms.workers.dev/products");
+        const products = await response.json();
+
+        if (!Array.isArray(products)) {
+          throw new Error("Invalid products response");
+        }
+
+        const related = products
+          .filter((product) => String(product.id) !== String(currentProductId))
+          .slice(0, 3);
+
+        if (!related.length) {
+          relatedEl.innerHTML = `
+            <div class="related-card">
+              <h4>More products coming soon</h4>
+              <p>Check back soon for new Kap10's Kustoms releases.</p>
+              <a class="btn secondary" href="ats.html">Browse Store</a>
+            </div>
+          `;
+          return;
+        }
+
+        relatedEl.innerHTML = related.map((product) => `
+          <div class="related-card">
+            <img
+              class="related-image"
+              src="${productImage(product)}"
+              alt="${product.name}"
+            >
+
+            <h4>${product.name}</h4>
+            <p>${product.category || "Kap10's Kustoms"}</p>
+            <p><strong>$${productPrice(product)} USD</strong></p>
+
+            <a class="btn secondary" href="skin.html?productId=${encodeURIComponent(product.id)}">
+              View Skin
+            </a>
+          </div>
+        `).join("");
+      } catch (err) {
+        console.error(err);
+        relatedEl.innerHTML = `
+          <div class="related-card">
+            <h4>Browse more skins</h4>
+            <p>See the latest Kap10's Kustoms releases.</p>
+            <a class="btn secondary" href="ats.html">Browse Store</a>
+          </div>
+        `;
       }
     }
 
