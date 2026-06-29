@@ -8,29 +8,28 @@ function productPrice(product) {
   return Number(product.price || 0).toFixed(2);
 }
 
-function getGalleryImages(product) {
-  let filenames = [];
-
+async function getGalleryImages(product) {
   try {
-    filenames = product.gallery ? JSON.parse(product.gallery) : [];
+    const response = await fetch(
+      `${API_BASE}/products/${encodeURIComponent(product.id)}/images`
+    );
+
+    const data = await response.json();
+
+    if (response.ok && data.ok && Array.isArray(data.images) && data.images.length) {
+      const hero = data.images.find((image) => image.type === "hero");
+      const gallery = data.images.filter((image) => image.type === "gallery");
+
+      return [
+        ...(hero?.url ? [hero.url] : []),
+        ...gallery.map((image) => image.url).filter(Boolean)
+      ];
+    }
   } catch (err) {
-    filenames = [];
+    console.error("Product images failed to load:", err);
   }
 
-  if (!Array.isArray(filenames) || !filenames.length) {
-    filenames = ["hero.jpg"];
-  }
-
-  const truckFolder = product.truck_folder || "";
-  const imageFolder = product.image_folder || "";
-
-  if (!truckFolder || !imageFolder) {
-    return [productImage(product)];
-  }
-
-  return filenames.map((filename) =>
-    `images/ats/${truckFolder}/${imageFolder}/${filename}`
-  );
+  return [productImage(product)];
 }
 
 function renderList(items) {
@@ -72,8 +71,8 @@ async function loadSkin() {
       return;
     }
 
-    const galleryImages = getGalleryImages(product);
-    const image = galleryImages[0];
+    const galleryImages = await getGalleryImages(product);
+const image = galleryImages[0];
 
     container.innerHTML = `
       <div class="skin-page">

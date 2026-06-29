@@ -314,6 +314,44 @@ a {
   text-align: center;
 }
 
+.mod-maker-filter {
+  margin: 0 0 24px;
+  padding: 18px;
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 18px;
+  background: rgba(255,255,255,.035);
+}
+
+.filter-label {
+  margin: 0 0 12px;
+  color: rgba(255,255,255,.72);
+  font-size: .9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+.mod-maker-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.mod-maker-btn {
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 999px;
+  padding: 9px 14px;
+  background: rgba(255,255,255,.06);
+  color: #fff;
+  cursor: pointer;
+}
+
+.mod-maker-btn:hover,
+.mod-maker-btn.active {
+  border-color: #2d7dff;
+  background: rgba(45,125,255,.22);
+}
+
 .product-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 420px));
@@ -1446,17 +1484,39 @@ button[data-dashboard-tab].active{
 
 #galleryPreviewList {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 160px));
+  gap: 12px;
   margin-top: 12px;
+  align-items: start;
 }
 
 .gallery-preview-thumb {
-  width: 100%;
-  aspect-ratio: 1 / 1;
+  position: relative;
+  width: 160px;
+  aspect-ratio: 16 / 9;
   border-radius: 12px;
   background-size: cover;
   background-position: center;
-  border: 1px solid rgba(255,255,255,.14);
-  background-color: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.08);
+  overflow: hidden;
+}
+
+.gallery-delete-btn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0,0,0,.75);
+  color: #fff;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background .2s ease;
+}
+
+.gallery-delete-btn:hover {
+  background: #d63b3b;
 }

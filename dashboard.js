@@ -426,8 +426,9 @@ function renderProductEditor(product) {
     form.truck_folder.value = product.truck_folder || "";
     form.image_folder.value = product.image_folder || "";
     form.download_file.value = product.download_file || "";
-    form.description.value = product.description || "";
-        form.active.checked = !!product.active;
+        form.description.value = product.description || "";
+    form.included.value = product.included || "";
+    form.active.checked = !!product.active;
 
     loadProductImages(product.id)
       .then(renderLoadedProductImages)
@@ -504,7 +505,8 @@ price: Number(formData.get("price") || 0),
   image_folder: imageFolder,
   gallery: JSON.stringify(["hero.jpg", "rear.jpg", "drv.jpg", "pass.jpg"]),
   download_file: "",
-  description: formData.get("description"),
+    description: formData.get("description"),
+  included: formData.get("included"),
   active: formData.get("active") === "on"
 };
 
@@ -554,6 +556,30 @@ const response = await fetch(url, {
     }
   });
 }
+
+document.addEventListener("click", async (event) => {
+  const galleryDeleteBtn = event.target.closest(".gallery-delete-btn");
+  if (!galleryDeleteBtn) return;
+
+  const thumb = galleryDeleteBtn.closest(".gallery-preview-thumb");
+  const imageId = thumb?.dataset.imageId;
+
+  if (!editingProductId || !imageId) return;
+
+  const confirmed = confirm("Delete this gallery image?");
+  if (!confirmed) return;
+
+  try {
+    await deleteProductImage(editingProductId, imageId);
+
+    if (thumb) {
+      thumb.remove();
+    }
+  } catch (err) {
+    console.error(err);
+    alert(err.message);
+  }
+});
 
 document.addEventListener("click", (event) => {
   const item = event.target.closest(".product-list-item");
@@ -939,13 +965,22 @@ function renderLoadedProductImages(images = []) {
 
   if (galleryPreviewList) {
     galleryImages.forEach((image) => {
-      if (!image.url) return;
+  if (!image.url) return;
 
-      const thumb = document.createElement("div");
-      thumb.className = "gallery-preview-thumb";
-      thumb.style.backgroundImage = `url("${image.url}")`;
-      galleryPreviewList.appendChild(thumb);
-    });
+  const thumb = document.createElement("div");
+  thumb.className = "gallery-preview-thumb";
+  thumb.style.backgroundImage = `url("${image.url}")`;
+  thumb.dataset.imageId = image.id;
+
+  const deleteBtn = document.createElement("button");
+  deleteBtn.className = "gallery-delete-btn";
+  deleteBtn.type = "button";
+  deleteBtn.textContent = "×";
+
+  thumb.appendChild(deleteBtn);
+
+  galleryPreviewList.appendChild(thumb);
+});
   }
 }
 
@@ -960,6 +995,24 @@ function renderLoadedProductDownload(download) {
   if (span) {
     span.textContent = `Uploaded: ${download.filename}`;
   }
+}
+
+async function deleteProductImage(productId, imageId) {
+  const response = await fetch(
+    `${API_BASE}/admin/products/${encodeURIComponent(productId)}/images/${encodeURIComponent(imageId)}`,
+    {
+      method: "DELETE",
+      credentials: "include"
+    }
+  );
+
+  const data = await response.json();
+
+  if (!response.ok || !data.ok) {
+    throw new Error(data.error || "Image delete failed.");
+  }
+
+  return data;
 }
 
 async function loadProductImages(productId) {

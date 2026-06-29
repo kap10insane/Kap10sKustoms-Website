@@ -25,7 +25,7 @@
     Products
   </button>
   <button type="button" class="dashboard-tab" data-dashboard-tab="categories">
-    Categories
+    Mod Maker
   </button>
   <button type="button" class="dashboard-tab" data-dashboard-tab="platforms">
   Platforms
@@ -97,11 +97,11 @@
         </label>
 
         <label>
-          Category
-          <select name="category" id="productCategorySelect" required>
-            <option value="">Loading categories...</option>
-          </select>
-        </label>
+  Mod Maker
+  <select name="category" id="productCategorySelect" required>
+    <option value="">Loading Mod Makers...</option>
+  </select>
+</label>
 
         <label>
           Platform
@@ -162,9 +162,18 @@
 </div>
 
         <label>
-          Description
-          <textarea name="description" rows="5" placeholder="Product description..." required></textarea>
-        </label>
+  Description
+  <textarea name="description" rows="5" placeholder="Product description..." required></textarea>
+</label>
+
+<label>
+  Included With Purchase
+  <textarea
+    name="included"
+    rows="5"
+    placeholder="One item per line&#10;Truck skin (.scs)&#10;Cabin accessories&#10;Installation instructions&#10;Future updates"
+  ></textarea>
+</label>
 
         <label class="checkbox-row">
           <input name="active" type="checkbox" checked>
@@ -183,8 +192,8 @@
   <section class="dashboard-panel dashboard-tab-panel" data-dashboard-panel="categories">
   <div class="dashboard-panel-header">
     <div>
-      <h2>Categories</h2>
-      <p>Manage store categories.</p>
+      <h2>Mod Maker</h2>
+<p>Manage the truck mod makers used throughout the store.</p>
     </div>
 
     <button class="btn primary" type="button" id="newCategoryBtn">
