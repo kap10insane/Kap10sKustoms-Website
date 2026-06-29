@@ -184,13 +184,20 @@ document.addEventListener("click", async (event) => {
     const checkoutData = await checkoutResponse.json();
 
     if (!checkoutData.ok || !checkoutData.checkoutUrl) {
-      throw new Error("Checkout URL missing.");
-    }
+  console.error("Checkout failed:", checkoutData);
 
-    window.location.href = checkoutData.checkoutUrl;
+  const stripeMessage =
+    checkoutData.details?.error?.message ||
+    checkoutData.error ||
+    "Checkout URL missing.";
+
+  throw new Error(stripeMessage);
+}
+
+window.location.href = checkoutData.checkoutUrl;
   } catch (err) {
     console.error(err);
-    alert("Checkout could not be started. Please try again.");
+    alert(err.message || "Checkout could not be started. Please try again.");
     buyNowButton.textContent = "Buy Now";
     buyNowButton.style.pointerEvents = "auto";
   }
