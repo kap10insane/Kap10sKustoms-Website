@@ -188,25 +188,23 @@ a {
   color: var(--muted);
 }
 
-.clickable-category-card {
-  display: flex;
-  flex-direction: column;
-
-  width: 100%;
-  height: 100%;
-
-  box-sizing: border-box;
-
-  text-decoration: none;
-  color: inherit;
+.clickable-card-wrap {
+  position: relative;
   cursor: pointer;
 }
 
-.clickable-category-card:hover {
-  text-decoration: none;
+.full-card-link {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
 }
 
-.clickable-category-card .card-link {
+.clickable-card-wrap {
+  cursor: pointer;
+}
+
+.clickable-card-wrap .card-link {
   margin-top: auto;
 }
 
