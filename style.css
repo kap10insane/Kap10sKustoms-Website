@@ -157,6 +157,17 @@ a {
   margin-bottom: 15px;
 }
 
+.contact-title {
+  font-size: 2rem;
+  line-height: 1.1;
+  margin-bottom: 18px;
+  font-weight: 700;
+}
+
+.contact-title span {
+  color: var(--accent);
+}
+
 .category-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
