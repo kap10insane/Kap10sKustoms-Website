@@ -1622,12 +1622,24 @@ button[data-dashboard-tab].active{
 }
 
 .contact-title {
-  font-size: 2rem;
+  font-size: 1.8rem;
   line-height: 1.15;
+  margin-bottom: 20px;
   font-weight: 700;
-  margin-bottom: 18px;
 }
 
 .contact-title span {
   color: var(--accent);
+}
+
+/* Contact section links */
+.contact-section a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.contact-section a:hover {
+  color: #ffffff;
 }
