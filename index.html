@@ -166,5 +166,27 @@
 
   <script src="auth.js"></script>
   <script src="script.js"></script>
+  <script>
+const copySupportEmail = document.getElementById("copySupportEmail");
+const emailCopiedMessage = document.getElementById("emailCopiedMessage");
+
+if (copySupportEmail && emailCopiedMessage) {
+  copySupportEmail.addEventListener("click", async (e) => {
+    e.preventDefault();
+
+    try {
+      await navigator.clipboard.writeText("support@kap10skustoms.com");
+
+      emailCopiedMessage.classList.add("show");
+
+      setTimeout(() => {
+        emailCopiedMessage.classList.remove("show");
+      }, 2000);
+    } catch (err) {
+      console.error(err);
+    }
+  });
+}
+</script>
 </body>
 </html>
