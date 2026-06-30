@@ -1643,3 +1643,16 @@ button[data-dashboard-tab].active{
 .contact-section a:hover {
   color: #ffffff;
 }
+
+.copy-message {
+  opacity: 0;
+  color: var(--accent);
+  font-size: 0.9rem;
+  margin-top: -8px;
+  transition: opacity .25s ease;
+  pointer-events: none;
+}
+
+.copy-message.show {
+  opacity: 1;
+}
