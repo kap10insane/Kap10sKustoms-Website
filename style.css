@@ -1544,3 +1544,68 @@ button[data-dashboard-tab].active{
 .gallery-delete-btn:hover {
   background: #d63b3b;
 }
+
+
+.legal-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 70px 30px;
+}
+
+.legal-container {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 42px;
+}
+
+.legal-container h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.legal-updated {
+  color: var(--muted);
+  margin-bottom: 35px;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.footer-links a {
+  color: var(--muted);
+}
+
+.footer-links a:hover {
+  color: var(--accent);
+}
+
+.legal-container h2 {
+  margin-top: 42px;
+  margin-bottom: 14px;
+  font-size: 1.5rem;
+  color: var(--text);
+}
+
+.legal-container p {
+  margin-bottom: 18px;
+  color: var(--muted);
+}
+
+.legal-container ul {
+  margin: 18px 0 28px 28px;
+}
+
+.legal-container li {
+  margin-bottom: 10px;
+  color: var(--muted);
+}
+
+.legal-container strong {
+  color: var(--text);
+}
