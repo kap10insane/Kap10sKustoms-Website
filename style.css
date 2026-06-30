@@ -1609,3 +1609,14 @@ button[data-dashboard-tab].active{
 .legal-container strong {
   color: var(--text);
 }
+
+.contact-title {
+  font-size: 2rem;
+  line-height: 1.15;
+  font-weight: 700;
+  margin-bottom: 18px;
+}
+
+.contact-title span {
+  color: var(--accent);
+}
