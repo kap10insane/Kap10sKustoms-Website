@@ -389,12 +389,24 @@ a {
 
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 420px));
+  grid-template-columns: repeat(3, minmax(300px, 400px));
   gap: 30px;
   justify-content: center;
-  max-width: 1400px;
+  max-width: 1320px;
   margin: 40px auto 0;
   padding: 0 30px;
+}
+
+@media (max-width: 1200px) {
+  .product-grid {
+    grid-template-columns: repeat(2, minmax(300px, 400px));
+  }
+}
+
+@media (max-width: 768px) {
+  .product-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .product-card {
