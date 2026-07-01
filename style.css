@@ -389,10 +389,10 @@ a {
 
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(300px, 400px));
+  grid-template-columns: repeat(3, 1fr);
   gap: 30px;
   justify-content: center;
-  max-width: 1320px;
+  max-width: 1400px;
   margin: 40px auto 0;
   padding: 0 30px;
 }
