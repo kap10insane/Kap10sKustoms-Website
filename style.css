@@ -408,6 +408,13 @@ a {
   }
 }
 
+.product-grid {
+  width: min(1400px, calc(100vw - 60px));
+  max-width: 1400px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  justify-content: stretch;
+}
+
 .product-card {
   background: var(--card);
   border: 1px solid var(--border);
