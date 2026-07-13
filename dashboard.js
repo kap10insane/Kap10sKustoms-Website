@@ -18,6 +18,8 @@ function updateProductTypeFields() {
 
   const digitalVersionField = document.getElementById("digitalVersionField");
   const digitalDownloadSection = document.getElementById("digitalDownloadSection");
+  const physicalProductSection = document.getElementById("physicalProductSection");
+  const productCategoryLabel = document.getElementById("productCategoryLabel");
 
   const showDigitalFields = productType === "digital";
 
@@ -25,8 +27,29 @@ function updateProductTypeFields() {
     digitalVersionField.style.display = showDigitalFields ? "" : "none";
   }
 
+  if (physicalProductSection) {
+  physicalProductSection.style.display =
+    productType === "physical" ? "" : "none";
+}
+
   if (digitalDownloadSection) {
     digitalDownloadSection.style.display = showDigitalFields ? "" : "none";
+  }
+
+  if (productCategoryLabel) {
+    switch (productType) {
+      case "physical":
+        productCategoryLabel.textContent = "Category";
+        break;
+
+      case "custom":
+        productCategoryLabel.textContent = "Service Category";
+        break;
+
+      default:
+        productCategoryLabel.textContent = "Mod Maker";
+        break;
+    }
   }
 }
 

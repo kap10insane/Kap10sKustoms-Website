@@ -96,8 +96,8 @@
           <input name="slug" type="text" placeholder="blue-collar" required>
         </label>
 
-        <label>
-  Mod Maker
+       <label>
+  <span id="productCategoryLabel">Mod Maker</span>
   <select name="category" id="productCategorySelect" required>
     <option value="">Loading Mod Makers...</option>
   </select>
@@ -169,6 +169,32 @@
     <input type="file" id="downloadFileUpload" accept=".scs,.zip">
     <span>Upload .scs or .zip file</span>
   </label>
+</div>
+
+<div id="physicalProductSection" style="display:none;">
+
+  <h3>Physical Product</h3>
+
+  <label>
+    SKU
+    <input name="sku" type="text" placeholder="SKU-001">
+  </label>
+
+  <label>
+    Inventory Quantity
+    <input name="inventory" type="number" min="0" placeholder="0">
+  </label>
+
+  <label class="checkbox-row">
+    <input name="track_inventory" type="checkbox">
+    Track Inventory
+  </label>
+
+  <label class="checkbox-row">
+    <input name="allow_backorders" type="checkbox">
+    Allow Backorders
+  </label>
+
 </div>
 
         <label>
