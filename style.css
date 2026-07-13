@@ -1692,3 +1692,13 @@ button[data-dashboard-tab].active{
     grid-template-columns: 1fr;
   }
 }
+
+.ats-storefront-stack {
+  max-width: 1320px;
+  margin: 0 auto;
+}
+
+.mod-maker-filter {
+  max-width: 1320px;
+  margin: 0 auto 30px;
+}
