@@ -104,6 +104,16 @@
 </label>
 
         <label>
+  Product Type
+  <select name="product_type" id="productTypeSelect" required>
+    <option value="digital" selected>Digital Product</option>
+    <option value="physical">Physical Product</option>
+    <option value="custom">Custom Service</option>
+  </select>
+</label>
+
+
+        <label>
           Platform
           <select name="platform" id="productPlatformSelect" required>
             <option value="">Loading platforms...</option>
@@ -115,10 +125,10 @@
           <input name="price" type="number" step="0.01" min="0" placeholder="4.99" required>
         </label>
 
-        <label>
-          Version
-          <input name="version" type="text" placeholder="1.55+">
-        </label>
+       <label id="digitalVersionField">
+  Version
+  <input name="version" type="text" placeholder="1.55+">
+</label>
 
        <input name="truck_folder" type="hidden">
 <input name="image_folder" type="hidden">
@@ -150,7 +160,7 @@
   <div id="galleryPreviewList"></div>
 </div>
 
-<div class="upload-section">
+<div class="upload-section" id="digitalDownloadSection">
   <h3>Download File</h3>
   <p>Upload the finished mod package. Use .scs or .zip for now.</p>
 

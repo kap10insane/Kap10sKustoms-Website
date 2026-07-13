@@ -13,6 +13,27 @@ let editingProductId = null;
 let editingCategoryId = null;
 let editingPlatformId = null;
 
+function updateProductTypeFields() {
+  const productType = form?.product_type?.value || "digital";
+
+  const digitalVersionField = document.getElementById("digitalVersionField");
+  const digitalDownloadSection = document.getElementById("digitalDownloadSection");
+
+  const showDigitalFields = productType === "digital";
+
+  if (digitalVersionField) {
+    digitalVersionField.style.display = showDigitalFields ? "" : "none";
+  }
+
+  if (digitalDownloadSection) {
+    digitalDownloadSection.style.display = showDigitalFields ? "" : "none";
+  }
+}
+
+if (form?.product_type) {
+  form.product_type.addEventListener("change", updateProductTypeFields);
+}
+
 async function loadCategories() {
   const select = document.getElementById("productCategorySelect");
 
@@ -420,6 +441,7 @@ function renderProductEditor(product) {
     form.name.value = product.name || "";
     form.slug.value = product.slug || "";
     form.category.value = product.category || "";
+    form.product_type.value = product.product_type || "digital";
     form.platform.value = product.platform || "";
     form.price.value = product.price || 0;
     form.version.value = product.version || "";
@@ -440,11 +462,14 @@ function renderProductEditor(product) {
       .catch((err) => {
         console.error(err);
       });
-  } else {
+    } else {
     form.querySelector("h2").textContent = "New Product";
     form.reset();
+    form.product_type.value = "digital";
     form.active.checked = true;
   }
+
+  updateProductTypeFields();
 }
 
 if (form && newBtn && cancelBtn) {
@@ -496,9 +521,10 @@ const product = {
   name: formData.get("name"),
   slug: formData.get("slug"),
   category: formData.get("category"),
-platform: formData.get("platform"),
-purchase_type: "",
-price: Number(formData.get("price") || 0),
+  product_type: formData.get("product_type") || "digital",
+  platform: formData.get("platform"),
+  purchase_type: "",
+  price: Number(formData.get("price") || 0),
   version: formData.get("version"),
   image: imagePath,
   truck_folder: truckFolder,
