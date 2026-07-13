@@ -406,35 +406,48 @@ async function loadDashboardProducts() {
       el.innerHTML = "<p>No products found.</p>";
       return;
     }
+el.innerHTML = visibleProducts.map((product) => `
+  <div
+    class="product-list-item"
+    data-product-id="${product.id}"
+  >
+    <button
+      type="button"
+      class="product-list-open"
+      data-product-id="${product.id}"
+    >
+      <div class="product-list-thumb">
+        ${
+          product.image && product.image.startsWith("http")
+            ? `<img src="${product.image}" alt="">`
+            : "📦"
+        }
+      </div>
 
-    el.innerHTML = visibleProducts.map((product) => `
-      <button
-        type="button"
-        class="product-list-item"
-        data-product-id="${product.id}"
-      >
-        <div class="product-list-thumb">
-          ${
-  product.image && product.image.startsWith("http")
-    ? `<img src="${product.image}" alt="">`
-    : "📦"
-}
-        </div>
+      <div class="product-list-main">
+        <strong>${product.name}</strong>
+        <span>${product.category || "Uncategorized"}</span>
+        <small>${product.platform || "No platform"}</small>
+      </div>
 
-        <div class="product-list-main">
-          <strong>${product.name}</strong>
-          <span>${product.category || "Uncategorized"}</span>
-          <small>${product.platform || "No platform"}</small>
-        </div>
+      <div class="product-list-meta">
+        <strong>$${Number(product.price || 0).toFixed(2)}</strong>
+        <span class="${product.active ? "status-active" : "status-archived"}">
+          ${product.active ? "Active" : "Archived"}
+        </span>
+      </div>
+    </button>
 
-        <div class="product-list-meta">
-          <strong>$${Number(product.price || 0).toFixed(2)}</strong>
-          <span class="${product.active ? "status-active" : "status-archived"}">
-            ${product.active ? "Active" : "Archived"}
-          </span>
-        </div>
-      </button>
-    `).join("");
+    <button
+      type="button"
+      class="product-delete-btn"
+      data-product-id="${product.id}"
+      data-product-name="${product.name}"
+    >
+      Delete
+    </button>
+  </div>
+`).join("");
 
   } catch (err) {
     console.error(err);
@@ -631,11 +644,14 @@ document.addEventListener("click", async (event) => {
 });
 
 document.addEventListener("click", (event) => {
-  const item = event.target.closest(".product-list-item");
+  const openBtn = event.target.closest(".product-list-open");
+  if (!openBtn) return;
+
+  const item = openBtn.closest(".product-list-item");
   if (!item) return;
 
   const product = dashboardProductsCache.find(
-    p => p.id === item.dataset.productId
+    (p) => p.id === item.dataset.productId
   );
 
   if (!product) return;
@@ -648,33 +664,53 @@ document.addEventListener("click", (event) => {
 });
 
 document.addEventListener("click", async (event) => {
-  const deleteBtn = event.target.closest(".delete-product-btn");
+  const deleteBtn = event.target.closest(".product-delete-btn");
   if (!deleteBtn) return;
 
+  event.preventDefault();
+  event.stopPropagation();
+
   const productId = deleteBtn.dataset.productId;
+  const productName = deleteBtn.dataset.productName || productId;
 
   const confirmed = confirm(
-    `Hide "${productId}" from the store?\n\nThis can be restored later.`
+    `Permanently delete "${productName}"?\n\nThis cannot be undone.`
   );
 
   if (!confirmed) return;
 
   try {
     const response = await fetch(
-      `${API_BASE}/admin/products/${encodeURIComponent(productId)}`,
+      `${API_BASE}/admin/products/${encodeURIComponent(productId)}/permanent`,
       {
-  method: "DELETE",
-  credentials: "include"
-}
+        method: "DELETE",
+        credentials: "include"
+      }
     );
 
     const data = await response.json();
 
     if (!response.ok || !data.ok) {
-      throw new Error(data.error || "Delete failed.");
+      throw new Error(data.error || "Permanent delete failed.");
     }
 
-    
+    if (editingProductId === productId) {
+      editingProductId = null;
+      form.reset();
+      form.style.display = "none";
+
+      const panel = document.getElementById("productEditorPanel");
+
+      if (panel) {
+        panel.innerHTML = `
+          <div class="product-editor-empty">
+            <h2>Select a product</h2>
+            <p>Choose a product from the list on the left or create a new one.</p>
+          </div>
+        `;
+      }
+    }
+
     await loadDashboardProducts();
 
   } catch (err) {
