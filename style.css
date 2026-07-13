@@ -1671,28 +1671,24 @@ button[data-dashboard-tab].active{
 
 /* Store product grid override */
 .product-grid {
-  display: grid !important;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 30px !important;
-  justify-content: center !important;
-  width: 100% !important;
-  max-width: 1400px;
-  margin: 40px auto 0 !important;
-  padding: 0 30px !important;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(300px, 400px));
+  gap: 30px;
+  justify-content: center;
+  max-width: 1320px;
+  margin: 40px auto 0;
+  padding: 0 30px;
 }
 
-.product-card {
-  width: 100% !important;
-}
 
 @media (max-width: 1200px) {
   .product-grid {
-    grid-template-columns: repeat(2, minmax(300px, 400px)) !important;
+    grid-template-columns: repeat(2, minmax(300px, 400px));
   }
 }
 
 @media (max-width: 768px) {
   .product-grid {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: 1fr;
   }
 }
