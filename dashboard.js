@@ -485,8 +485,23 @@ function renderProductEditor(product) {
     form.image_folder.value = product.image_folder || "";
     form.download_file.value = product.download_file || "";
         form.description.value = product.description || "";
-    form.included.value = product.included || "";
-    form.active.checked = !!product.active;
+form.included.value = product.included || "";
+
+// Physical Product Fields
+form.sku.value = product.sku || "";
+form.inventory_quantity.value = product.inventory_quantity ?? 0;
+form.track_inventory.checked = !!product.track_inventory;
+form.allow_backorders.checked = !!product.allow_backorders;
+
+form.weight.value = product.weight ?? "";
+form.length.value = product.length ?? "";
+form.width.value = product.width ?? "";
+form.height.value = product.height ?? "";
+
+form.shipping_class.value = product.shipping_class || "";
+form.stock_status.value = product.stock_status || "in_stock";
+
+form.active.checked = !!product.active;
 
     loadProductImages(product.id)
       .then(renderLoadedProductImages)
@@ -501,8 +516,23 @@ function renderProductEditor(product) {
     } else {
     form.querySelector("h2").textContent = "New Product";
     form.reset();
-    form.product_type.value = "digital";
-    form.active.checked = true;
+
+form.product_type.value = "digital";
+
+form.sku.value = "";
+form.inventory_quantity.value = 0;
+form.track_inventory.checked = false;
+form.allow_backorders.checked = false;
+
+form.weight.value = "";
+form.length.value = "";
+form.width.value = "";
+form.height.value = "";
+
+form.shipping_class.value = "";
+form.stock_status.value = "in_stock";
+
+form.active.checked = true;
   }
 
   updateProductTypeFields();
@@ -569,7 +599,32 @@ const product = {
   download_file: "",
     description: formData.get("description"),
   included: formData.get("included"),
-  active: formData.get("active") === "on"
+
+sku: String(formData.get("sku") || "").trim(),
+inventory_quantity: Number(formData.get("inventory_quantity") || 0),
+track_inventory: formData.get("track_inventory") === "on",
+allow_backorders: formData.get("allow_backorders") === "on",
+
+weight: formData.get("weight")
+  ? Number(formData.get("weight"))
+  : null,
+
+length: formData.get("length")
+  ? Number(formData.get("length"))
+  : null,
+
+width: formData.get("width")
+  ? Number(formData.get("width"))
+  : null,
+
+height: formData.get("height")
+  ? Number(formData.get("height"))
+  : null,
+
+shipping_class: String(formData.get("shipping_class") || "").trim(),
+stock_status: String(formData.get("stock_status") || "in_stock").trim(),
+
+active: formData.get("active") === "on"
 };
 
     try {
