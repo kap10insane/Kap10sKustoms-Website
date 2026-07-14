@@ -306,7 +306,7 @@ async function loadPhysicalProduct() {
   }
 }
 
-document.addEventListener("click", (event) => {
+document.addEventListener("click", async (event) => {
   const thumbnail = event.target.closest(
     "[data-gallery-image]"
   );
@@ -327,9 +327,50 @@ document.addEventListener("click", (event) => {
 
   if (!buyNowButton || buyNowButton.disabled) return;
 
-  alert(
-    "Physical-product checkout is being connected next."
-  );
-});
+  const productId = buyNowButton.dataset.productId;
 
+  if (!productId) {
+    alert("Unable to start checkout. Missing product ID.");
+    return;
+  }
+
+  const originalText = buyNowButton.textContent;
+
+  buyNowButton.disabled = true;
+  buyNowButton.textContent = "Opening Checkout...";
+
+  try {
+    const response = await fetch(`${API_BASE}/checkout`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        productId
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || !data.ok || !data.checkoutUrl) {
+      throw new Error(
+        data?.message ||
+        data?.error ||
+        "Unable to start checkout."
+      );
+    }
+
+    window.location.href = data.checkoutUrl;
+  } catch (err) {
+    console.error("Physical checkout failed:", err);
+
+    alert(
+      err.message ||
+      "Unable to start checkout. Please try again."
+    );
+
+    buyNowButton.disabled = false;
+    buyNowButton.textContent = originalText;
+  }
+});
 loadPhysicalProduct();
