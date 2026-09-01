@@ -473,33 +473,136 @@ async function loadOrders() {
       throw new Error(data.error || "Invalid orders response");
     }
 
+    window.dashboardOrdersCache = data.orders;
+
     if (!data.orders.length) {
       el.innerHTML = "<p>No physical orders yet.</p>";
       return;
     }
 
-    el.innerHTML = data.orders.map((order) => `
-      <div class="order-list-item">
-        <div class="order-list-main">
-          <strong>${order.product_name || "Unknown Product"}</strong>
-          <span>${order.shipping_name || "Unknown Customer"}</span>
-          <small>${order.customer_email || ""}</small>
-        </div>
+   el.innerHTML = data.orders.map((order) => {
+  const fulfillmentStatus =
+    order.fulfillment_status || "awaiting_fulfillment";
 
-        <div class="order-list-meta">
-          <strong>$${Number(order.total || 0).toFixed(2)}</strong>
-          <span>
-            ${order.fulfillment_status || "awaiting_fulfillment"}
-          </span>
-        </div>
+  const statusLabel = fulfillmentStatus
+    .replaceAll("_", " ")
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
+
+  return `
+    <div class="order-list-item">
+      <div class="order-list-main">
+        <strong>${order.product_name || "Unknown Product"}</strong>
+
+        <span>
+          ${order.shipping_name || "Unknown Customer"}
+        </span>
+
+        <small>
+          ${order.customer_email || ""}
+        </small>
       </div>
-    `).join("");
+
+      <div class="order-list-meta">
+        <strong>
+          $${Number(order.total || 0).toFixed(2)}
+        </strong>
+
+        <span>
+          ${statusLabel}
+        </span>
+
+        <button
+          type="button"
+          class="btn secondary order-view-btn"
+          data-order-id="${order.id}"
+        >
+          View Order
+        </button>
+      </div>
+    </div>
+  `;
+}).join("");
 
   } catch (err) {
     console.error(err);
     el.innerHTML = "<p>Could not load orders.</p>";
   }
 }
+
+document.addEventListener("click", (event) => {
+  const button = event.target.closest(".order-view-btn");
+
+  if (!button) return;
+
+  const orderId = button.dataset.orderId;
+  const order = (window.dashboardOrdersCache || []).find(
+    (item) => String(item.id) === String(orderId)
+  );
+
+  if (!order) return;
+
+  const details = document.getElementById("orderDetails");
+  const list = document.getElementById("ordersList");
+
+  if (!details || !list) return;
+
+  details.innerHTML = `
+    <div class="order-detail-card">
+      <h3>Order Details</h3>
+
+      <p><strong>Product:</strong> ${order.product_name || "Unknown Product"}</p>
+      <p><strong>Customer:</strong> ${order.shipping_name || "Unknown Customer"}</p>
+      <p><strong>Email:</strong> ${order.customer_email || ""}</p>
+      <p><strong>Phone:</strong> ${order.shipping_phone || ""}</p>
+
+      <hr>
+
+      <h4>Shipping</h4>
+
+      <p>${order.shipping_address_line1 || ""}</p>
+      <p>${order.shipping_address_line2 || ""}</p>
+      <p>
+        ${order.shipping_city || ""}
+        ${order.shipping_state || ""}
+        ${order.shipping_postal_code || ""}
+      </p>
+      <p>${order.shipping_country || ""}</p>
+
+      <hr>
+
+      <p><strong>Total:</strong> $${Number(order.total || 0).toFixed(2)}</p>
+      <p><strong>Status:</strong> ${
+        (order.fulfillment_status || "awaiting_fulfillment")
+          .replaceAll("_", " ")
+          .replace(/\b\w/g, (letter) => letter.toUpperCase())
+      }</p>
+
+      <button
+        type="button"
+        class="btn secondary"
+        id="backToOrdersBtn"
+      >
+        Back to Orders
+      </button>
+    </div>
+  `;
+
+  list.style.display = "none";
+  details.style.display = "block";
+});
+
+document.addEventListener("click", (event) => {
+  if (!event.target.closest("#backToOrdersBtn")) return;
+
+  const details = document.getElementById("orderDetails");
+  const list = document.getElementById("ordersList");
+
+  if (!details || !list) return;
+
+  details.style.display = "none";
+  list.style.display = "";
+});
+
 
 function renderProductEditor(product) {
   const panel = document.getElementById("productEditorPanel");
