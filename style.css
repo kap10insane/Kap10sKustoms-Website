@@ -1741,3 +1741,48 @@ button[data-dashboard-tab].active{
   max-width: 1320px;
   margin: 0 auto 30px;
 }
+
+
+.orders-section {
+  margin-top: 24px;
+}
+
+.orders-section:first-child {
+  margin-top: 0;
+}
+
+.orders-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.orders-section-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.orders-section-header span {
+  min-width: 30px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.orders-section-list {
+  display: grid;
+  gap: 12px;
+}
+
+.orders-empty {
+  margin: 0;
+  padding: 14px 0;
+  opacity: 0.65;
+}

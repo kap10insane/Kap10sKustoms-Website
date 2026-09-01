@@ -473,55 +473,96 @@ async function loadOrders() {
       throw new Error(data.error || "Invalid orders response");
     }
 
-    window.dashboardOrdersCache = data.orders;
+   window.dashboardOrdersCache = data.orders;
 
-    if (!data.orders.length) {
-      el.innerHTML = "<p>No physical orders yet.</p>";
-      return;
-    }
+if (!data.orders.length) {
+  el.innerHTML = "<p>No physical orders yet.</p>";
+  return;
+}
 
-   el.innerHTML = data.orders.map((order) => {
-  const fulfillmentStatus =
+const renderOrderList = (orders) => {
+  if (!orders.length) {
+    return `<p class="orders-empty">No orders in this section.</p>`;
+  }
+
+  return orders.map((order) => {
+    const fulfillmentStatus =
+      order.fulfillment_status || "awaiting_fulfillment";
+
+    const statusLabel = fulfillmentStatus
+      .replaceAll("_", " ")
+      .replace(/\b\w/g, (letter) => letter.toUpperCase());
+
+    return `
+      <div class="order-list-item">
+        <div class="order-list-main">
+          <strong>${order.product_name || "Unknown Product"}</strong>
+
+          <span>
+            ${order.shipping_name || "Unknown Customer"}
+          </span>
+
+          <small>
+            ${order.customer_email || ""}
+          </small>
+        </div>
+
+        <div class="order-list-meta">
+          <strong>
+            $${Number(order.total || 0).toFixed(2)}
+          </strong>
+
+          <span>
+            ${statusLabel}
+          </span>
+
+          <button
+            type="button"
+            class="btn secondary order-view-btn"
+            data-order-id="${order.id}"
+          >
+            View Order
+          </button>
+        </div>
+      </div>
+    `;
+  }).join("");
+};
+
+const openOrders = data.orders.filter((order) => {
+  const status =
     order.fulfillment_status || "awaiting_fulfillment";
 
-  const statusLabel = fulfillmentStatus
-    .replaceAll("_", " ")
-    .replace(/\b\w/g, (letter) => letter.toUpperCase());
+  return status !== "closed";
+});
 
-  return `
-    <div class="order-list-item">
-      <div class="order-list-main">
-        <strong>${order.product_name || "Unknown Product"}</strong>
+const closedOrders = data.orders.filter((order) => {
+  return order.fulfillment_status === "closed";
+});
 
-        <span>
-          ${order.shipping_name || "Unknown Customer"}
-        </span>
-
-        <small>
-          ${order.customer_email || ""}
-        </small>
-      </div>
-
-      <div class="order-list-meta">
-        <strong>
-          $${Number(order.total || 0).toFixed(2)}
-        </strong>
-
-        <span>
-          ${statusLabel}
-        </span>
-
-        <button
-          type="button"
-          class="btn secondary order-view-btn"
-          data-order-id="${order.id}"
-        >
-          View Order
-        </button>
-      </div>
+el.innerHTML = `
+  <div class="orders-section">
+    <div class="orders-section-header">
+      <h3>Open Orders</h3>
+      <span>${openOrders.length}</span>
     </div>
-  `;
-}).join("");
+
+    <div class="orders-section-list">
+      ${renderOrderList(openOrders)}
+    </div>
+  </div>
+
+  <div class="orders-section">
+    <div class="orders-section-header">
+      <h3>Closed Orders</h3>
+      <span>${closedOrders.length}</span>
+    </div>
+
+    <div class="orders-section-list">
+      ${renderOrderList(closedOrders)}
+    </div>
+  </div>
+`;
 
   } catch (err) {
     console.error(err);
@@ -577,49 +618,139 @@ document.addEventListener("click", (event) => {
           .replace(/\b\w/g, (letter) => letter.toUpperCase())
       }</p>
 
-      <button
-  type="button"
-  class="btn primary"
-  id="markProcessingBtn"
-  data-order-id="${order.id}"
->
-  Mark Processing
-</button>
+      ${
+  (order.fulfillment_status || "awaiting_fulfillment") === "awaiting_fulfillment"
+    ? `
+      <div class="order-fulfillment-actions">
+        <button
+          type="button"
+          class="btn primary"
+          id="markProcessingBtn"
+          data-order-id="${order.id}"
+        >
+          Mark Processing
+        </button>
+      </div>
+    `
+    : ""
+}
 
-<div class="order-shipping-actions">
-  <h4>Ship Order</h4>
+${
+  order.fulfillment_status === "processing"
+    ? `
+      <div class="order-shipping-actions">
+        <h4>Ship Order</h4>
 
-  <label for="shippingCarrierInput">
-    Carrier
-  </label>
+        <label for="shippingCarrierInput">
+          Carrier
+        </label>
 
-  <select id="shippingCarrierInput">
-    <option value="">Select carrier...</option>
-    <option value="USPS">USPS</option>
-    <option value="UPS">UPS</option>
-    <option value="FedEx">FedEx</option>
-    <option value="Other">Other</option>
-  </select>
+        <select id="shippingCarrierInput">
+          <option value="">Select carrier...</option>
+          <option value="USPS">USPS</option>
+          <option value="UPS">UPS</option>
+          <option value="FedEx">FedEx</option>
+          <option value="Other">Other</option>
+        </select>
 
-  <label for="trackingNumberInput">
-    Tracking Number
-  </label>
+        <label for="trackingNumberInput">
+          Tracking Number
+        </label>
 
-  <input
-    type="text"
-    id="trackingNumberInput"
-    placeholder="Enter tracking number"
-  >
+        <input
+          type="text"
+          id="trackingNumberInput"
+          placeholder="Enter tracking number"
+        >
 
-  <button
-    type="button"
-    class="btn primary"
-    id="markShippedBtn"
-    data-order-id="${order.id}"
-  >
-    Mark Shipped
-  </button>
-</div>
+        <button
+          type="button"
+          class="btn primary"
+          id="markShippedBtn"
+          data-order-id="${order.id}"
+        >
+          Mark Shipped
+        </button>
+      </div>
+    `
+    : ""
+}
+
+${
+  order.fulfillment_status === "shipped"
+    ? `
+      <div class="order-shipping-summary">
+        <h4>Shipment</h4>
+
+        <p>
+          <strong>Carrier:</strong>
+          ${order.shipping_carrier || "Not recorded"}
+        </p>
+
+        <p>
+          <strong>Tracking:</strong>
+          ${order.tracking_number || "Not recorded"}
+        </p>
+
+        <p>
+          <strong>Shipped:</strong>
+          ${
+            order.shipped_at
+              ? new Date(order.shipped_at).toLocaleString()
+              : "Not recorded"
+          }
+        </p>
+
+        <button
+          type="button"
+          class="btn primary"
+          id="closeOrderBtn"
+          data-order-id="${order.id}"
+        >
+          Close Order
+        </button>
+      </div>
+    `
+    : ""
+}
+
+${
+  order.fulfillment_status === "closed"
+    ? `
+      <div class="order-shipping-summary">
+        <h4>Order Complete</h4>
+
+        <p>
+          <strong>Carrier:</strong>
+          ${order.shipping_carrier || "Not recorded"}
+        </p>
+
+        <p>
+          <strong>Tracking:</strong>
+          ${order.tracking_number || "Not recorded"}
+        </p>
+
+        <p>
+          <strong>Shipped:</strong>
+          ${
+            order.shipped_at
+              ? new Date(order.shipped_at).toLocaleString()
+              : "Not recorded"
+          }
+        </p>
+
+        <p>
+          <strong>Closed:</strong>
+          ${
+            order.delivered_at
+              ? new Date(order.delivered_at).toLocaleString()
+              : "Not recorded"
+          }
+        </p>
+      </div>
+    `
+    : ""
+}
 
       <button
         type="button"
@@ -766,6 +897,60 @@ document.addEventListener("click", async (event) => {
 
     button.disabled = false;
     button.textContent = "Mark Shipped";
+  }
+});
+
+
+document.addEventListener("click", async (event) => {
+  const button = event.target.closest("#closeOrderBtn");
+
+  if (!button) return;
+
+  const orderId = button.dataset.orderId;
+
+  button.disabled = true;
+  button.textContent = "Closing...";
+
+  try {
+    const response = await fetch(
+      `${API_BASE}/admin/orders/${encodeURIComponent(orderId)}`,
+      {
+        method: "PATCH",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          fulfillment_status: "closed"
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok || !data.ok) {
+      throw new Error(data.error || "Could not close order");
+    }
+
+    await loadOrders();
+
+    const details = document.getElementById("orderDetails");
+    const list = document.getElementById("ordersList");
+
+    if (details) {
+      details.style.display = "none";
+    }
+
+    if (list) {
+      list.style.display = "";
+    }
+  } catch (err) {
+    console.error(err);
+
+    alert(err.message || "Could not close order.");
+
+    button.disabled = false;
+    button.textContent = "Close Order";
   }
 });
 
