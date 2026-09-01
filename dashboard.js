@@ -494,39 +494,51 @@ const renderOrderList = (orders) => {
       .replace(/\b\w/g, (letter) => letter.toUpperCase());
 
     return `
-      <div class="order-list-item">
-        <div class="order-list-main">
-          <strong>${order.product_name || "Unknown Product"}</strong>
+  <div class="order-list-item">
+    <div class="order-list-product">
+      <span class="order-list-label">Product</span>
+      <strong>${order.product_name || "Unknown Product"}</strong>
+    </div>
 
-          <span>
-            ${order.shipping_name || "Unknown Customer"}
-          </span>
+    <div class="order-list-customer">
+      <span class="order-list-label">Customer</span>
+      <strong>${order.shipping_name || "Unknown Customer"}</strong>
+      <small>${order.customer_email || ""}</small>
+    </div>
 
-          <small>
-            ${order.customer_email || ""}
-          </small>
-        </div>
+    <div class="order-list-total">
+      <span class="order-list-label">Total</span>
+      <strong>$${Number(order.total || 0).toFixed(2)}</strong>
+    </div>
 
-        <div class="order-list-meta">
-          <strong>
-            $${Number(order.total || 0).toFixed(2)}
-          </strong>
+    <div class="order-list-status">
+      <span class="order-list-label">Status</span>
+      <strong>${statusLabel}</strong>
+    </div>
 
-          <span>
-            ${statusLabel}
-          </span>
+    <div class="order-list-date">
+      <span class="order-list-label">Order Date</span>
+      <strong>
+        ${
+          order.created_at
+            ? new Date(order.created_at).toLocaleDateString()
+            : "—"
+        }
+      </strong>
+    </div>
 
-          <button
-            type="button"
-            class="btn secondary order-view-btn"
-            data-order-id="${order.id}"
-          >
-            View Order
-          </button>
-        </div>
-      </div>
-    `;
-  }).join("");
+    <div class="order-list-action">
+      <button
+        type="button"
+        class="btn secondary order-view-btn"
+        data-order-id="${order.id}"
+      >
+        View Order
+      </button>
+    </div>
+  </div>
+`;
+}).join("");
 };
 
 const openOrders = data.orders.filter((order) => {

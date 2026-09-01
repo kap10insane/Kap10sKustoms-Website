@@ -1786,3 +1786,67 @@ button[data-dashboard-tab].active{
   padding: 14px 0;
   opacity: 0.65;
 }
+
+.order-list-item {
+  display: grid;
+  grid-template-columns: 1.4fr 1.8fr 0.7fr 0.8fr 0.9fr auto;
+  gap: 18px;
+  align-items: center;
+  padding: 16px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.order-list-product,
+.order-list-customer,
+.order-list-total,
+.order-list-status,
+.order-list-date,
+.order-list-action {
+  min-width: 0;
+}
+
+.order-list-product,
+.order-list-customer,
+.order-list-total,
+.order-list-status,
+.order-list-date {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.order-list-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.55;
+}
+
+.order-list-customer small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  opacity: 0.7;
+}
+
+.order-list-status strong {
+  text-transform: capitalize;
+}
+
+.order-list-action {
+  display: flex;
+  justify-content: flex-end;
+}
+
+@media (max-width: 900px) {
+  .order-list-item {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .order-list-action {
+    justify-content: flex-start;
+  }
+}
