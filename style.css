@@ -1850,3 +1850,78 @@ button[data-dashboard-tab].active{
     justify-content: flex-start;
   }
 }
+
+
+/* =========================================================
+   CUSTOM WORK REQUEST FORM
+   ========================================================= */
+
+.custom-work-form {
+  max-width: 900px;
+  margin: 40px auto 0;
+}
+
+.custom-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.custom-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.custom-form-field-full {
+  grid-column: 1 / -1;
+}
+
+.custom-form-field label {
+  font-weight: 700;
+}
+
+.custom-form-field input,
+.custom-form-field textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.28);
+  color: inherit;
+  font: inherit;
+}
+
+.custom-form-field textarea {
+  resize: vertical;
+  min-height: 170px;
+}
+
+.custom-form-field input:focus,
+.custom-form-field textarea:focus {
+  outline: none;
+  border-color: #2f8cff;
+  box-shadow: 0 0 0 2px rgba(47, 140, 255, 0.16);
+}
+
+.custom-form-help {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+
+.custom-form-message {
+  margin-top: 18px;
+  text-align: center;
+}
+
+@media (max-width: 700px) {
+  .custom-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .custom-form-field-full {
+    grid-column: auto;
+  }
+}

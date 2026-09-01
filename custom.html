@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Custom Work | Kap10's Kustoms</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <header class="site-header">
+    <a href="index.html" class="header-logo">
+      <img src="images/kap10-logo-round.png" alt="Kap10's Kustoms">
+    </a>
+
+    <nav class="site-nav">
+      <a href="index.html">Home</a>
+      <a href="ats.html">ATS Skins</a>
+      <a href="physical.html">Physical Products</a>
+      <a href="custom.html">Custom Work</a>
+      <a href="index.html#about">About</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="section-heading store-heading">
+        <p class="eyebrow">Custom Work</p>
+        <h2>Tell us what you have in mind.</h2>
+        <p>
+          Custom requests aren't limited to the products currently shown on our site.
+          Submit the details and any reference images or files, and we'll review the
+          project and get back to you.
+        </p>
+      </div>
+
+      <form id="customWorkForm" class="custom-work-form">
+        <div class="custom-form-grid">
+
+          <div class="custom-form-field">
+            <label for="customName">Name</label>
+            <input
+              type="text"
+              id="customName"
+              name="name"
+              autocomplete="name"
+              required
+            />
+          </div>
+
+          <div class="custom-form-field">
+            <label for="customEmail">Email</label>
+            <input
+              type="email"
+              id="customEmail"
+              name="email"
+              autocomplete="email"
+              required
+            />
+          </div>
+
+          <div class="custom-form-field custom-form-field-full">
+            <label for="customProject">What would you like made?</label>
+            <input
+              type="text"
+              id="customProject"
+              name="project"
+              required
+            />
+          </div>
+
+          <div class="custom-form-field custom-form-field-full">
+            <label for="customDescription">Project details</label>
+            <textarea
+              id="customDescription"
+              name="description"
+              rows="7"
+              required
+            ></textarea>
+          </div>
+
+          <div class="custom-form-field">
+            <label for="customQuantity">Quantity</label>
+            <input
+              type="number"
+              id="customQuantity"
+              name="quantity"
+              min="1"
+              placeholder="If applicable"
+            />
+          </div>
+
+          <div class="custom-form-field">
+            <label for="customTimeframe">Desired timeframe</label>
+            <input
+              type="text"
+              id="customTimeframe"
+              name="timeframe"
+              placeholder="If applicable"
+            />
+          </div>
+
+          <div class="custom-form-field custom-form-field-full">
+            <label for="customBudget">Budget</label>
+            <input
+              type="text"
+              id="customBudget"
+              name="budget"
+              placeholder="Optional"
+            />
+          </div>
+
+          <div class="custom-form-field custom-form-field-full">
+            <label for="customFiles">Reference images or files</label>
+            <input
+              type="file"
+              id="customFiles"
+              name="files"
+              multiple
+            />
+            <p class="custom-form-help">
+              Upload any photos, drawings, screenshots, or other files that help explain your project.
+            </p>
+          </div>
+
+        </div>
+
+        <div class="center-actions">
+          <button class="btn primary" type="submit">
+            Submit Custom Request
+          </button>
+        </div>
+
+        <p id="customFormMessage" class="custom-form-message"></p>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-links">
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms of Service</a>
+      <a href="refunds.html">Refund Policy</a>
+      <a href="shipping.html">Shipping Policy</a>
+      <a href="license.html">Digital License</a>
+    </div>
+
+    <p>Support: <strong>support@kap10skustoms.com</strong></p>
+    <p>© 2026 Kap10's Kustoms</p>
+    <p>Built Different. Made Custom.</p>
+  </footer>
+
+  <script src="custom.js"></script>
+</body>
+</html>
