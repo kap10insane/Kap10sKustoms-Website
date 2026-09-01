@@ -857,6 +857,7 @@ if (logoutBtn) {
 
 document.addEventListener("click", (event) => {
   const tab = event.target.closest("[data-dashboard-tab]");
+
   if (!tab) return;
 
   const target = tab.dataset.dashboardTab;
@@ -871,11 +872,11 @@ document.addEventListener("click", (event) => {
       panel.dataset.dashboardPanel === target
     );
   });
-});
 
-if (target === "orders") {
-  loadOrders();
-}
+  if (target === "orders") {
+    loadOrders();
+  }
+});
 
 const categoryModal = document.getElementById("categoryModal");
 const newCategoryBtn = document.getElementById("newCategoryBtn");
