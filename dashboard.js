@@ -455,6 +455,52 @@ el.innerHTML = visibleProducts.map((product) => `
   }
 }
 
+async function loadOrders() {
+  const el = document.getElementById("ordersList");
+
+  if (!el) return;
+
+  el.textContent = "Loading orders...";
+
+  try {
+    const response = await fetch(`${API_BASE}/admin/orders`, {
+      credentials: "include"
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || !data.ok || !Array.isArray(data.orders)) {
+      throw new Error(data.error || "Invalid orders response");
+    }
+
+    if (!data.orders.length) {
+      el.innerHTML = "<p>No physical orders yet.</p>";
+      return;
+    }
+
+    el.innerHTML = data.orders.map((order) => `
+      <div class="order-list-item">
+        <div class="order-list-main">
+          <strong>${order.product_name || "Unknown Product"}</strong>
+          <span>${order.shipping_name || "Unknown Customer"}</span>
+          <small>${order.customer_email || ""}</small>
+        </div>
+
+        <div class="order-list-meta">
+          <strong>$${Number(order.total || 0).toFixed(2)}</strong>
+          <span>
+            ${order.fulfillment_status || "awaiting_fulfillment"}
+          </span>
+        </div>
+      </div>
+    `).join("");
+
+  } catch (err) {
+    console.error(err);
+    el.innerHTML = "<p>Could not load orders.</p>";
+  }
+}
+
 function renderProductEditor(product) {
   const panel = document.getElementById("productEditorPanel");
   if (!panel || !form) return;
@@ -826,6 +872,10 @@ document.addEventListener("click", (event) => {
     );
   });
 });
+
+if (target === "orders") {
+  loadOrders();
+}
 
 const categoryModal = document.getElementById("categoryModal");
 const newCategoryBtn = document.getElementById("newCategoryBtn");
