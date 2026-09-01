@@ -586,6 +586,41 @@ document.addEventListener("click", (event) => {
   Mark Processing
 </button>
 
+<div class="order-shipping-actions">
+  <h4>Ship Order</h4>
+
+  <label for="shippingCarrierInput">
+    Carrier
+  </label>
+
+  <select id="shippingCarrierInput">
+    <option value="">Select carrier...</option>
+    <option value="USPS">USPS</option>
+    <option value="UPS">UPS</option>
+    <option value="FedEx">FedEx</option>
+    <option value="Other">Other</option>
+  </select>
+
+  <label for="trackingNumberInput">
+    Tracking Number
+  </label>
+
+  <input
+    type="text"
+    id="trackingNumberInput"
+    placeholder="Enter tracking number"
+  >
+
+  <button
+    type="button"
+    class="btn primary"
+    id="markShippedBtn"
+    data-order-id="${order.id}"
+  >
+    Mark Shipped
+  </button>
+</div>
+
       <button
         type="button"
         class="btn secondary"
@@ -663,6 +698,74 @@ document.addEventListener("click", async (event) => {
 
     button.disabled = false;
     button.textContent = "Mark Processing";
+  }
+});
+
+
+document.addEventListener("click", async (event) => {
+  const button = event.target.closest("#markShippedBtn");
+
+  if (!button) return;
+
+  const orderId = button.dataset.orderId;
+  const carrier = document.getElementById("shippingCarrierInput")?.value.trim();
+  const trackingNumber = document.getElementById("trackingNumberInput")?.value.trim();
+
+  if (!carrier) {
+    alert("Select a shipping carrier.");
+    return;
+  }
+
+  if (!trackingNumber) {
+    alert("Enter a tracking number.");
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = "Updating...";
+
+  try {
+    const response = await fetch(
+      `${API_BASE}/admin/orders/${encodeURIComponent(orderId)}`,
+      {
+        method: "PATCH",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          fulfillment_status: "shipped",
+          shipping_carrier: carrier,
+          tracking_number: trackingNumber
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok || !data.ok) {
+      throw new Error(data.error || "Could not mark order shipped");
+    }
+
+    await loadOrders();
+
+    const details = document.getElementById("orderDetails");
+    const list = document.getElementById("ordersList");
+
+    if (details) {
+      details.style.display = "none";
+    }
+
+    if (list) {
+      list.style.display = "";
+    }
+  } catch (err) {
+    console.error(err);
+
+    alert(err.message || "Could not mark order shipped.");
+
+    button.disabled = false;
+    button.textContent = "Mark Shipped";
   }
 });
 
