@@ -5,7 +5,11 @@ function productImage(product) {
 }
 
 function productPrice(product) {
-  return Number(product.price || 0).toFixed(2);
+  const price = Number(product.price || 0);
+
+  return price === 0
+    ? "FREE"
+    : `$${price.toFixed(2)} USD`;
 }
 
 async function getGalleryImages(product) {
@@ -136,7 +140,7 @@ const image = galleryImages[0];
 
           <hr>
 
-          <h2>$${productPrice(product)} USD</h2>
+          <h2>${productPrice(product)}</h2>
 
           <a
             class="btn primary buy-btn"

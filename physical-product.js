@@ -10,7 +10,11 @@ function productImage(product) {
 }
 
 function productPrice(product) {
-  return Number(product.price || 0).toFixed(2);
+  const price = Number(product.price || 0);
+
+  return price === 0
+    ? "FREE"
+    : `$${price.toFixed(2)} USD`;
 }
 
 function stockDetails(product) {
@@ -277,7 +281,7 @@ async function loadPhysicalProduct() {
 
           ${renderIncluded(product.included)}
 
-          <h2>$${productPrice(product)} USD</h2>
+          <h2>${productPrice(product)}</h2>
 
           <button
             class="btn primary buy-btn"

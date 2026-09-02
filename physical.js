@@ -10,7 +10,11 @@ function productImage(product) {
 }
 
 function productPrice(product) {
-  return Number(product.price || 0).toFixed(2);
+  const price = Number(product.price || 0);
+
+  return price === 0
+    ? "FREE"
+    : `$${price.toFixed(2)}`;
 }
 
 function productStockLabel(product) {
@@ -77,7 +81,7 @@ function renderPhysicalProducts(grid, products) {
 
                   <div class="product-footer">
                     <span class="price">
-                      $${productPrice(product)}
+                    ${productPrice(product)}
                     </span>
 
                     <a

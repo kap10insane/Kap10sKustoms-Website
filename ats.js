@@ -5,7 +5,11 @@ function productImage(product) {
 }
 
 function productPrice(product) {
-  return Number(product.price || 0).toFixed(2);
+  const price = Number(product.price || 0);
+
+  return price === 0
+    ? "FREE"
+    : `$${price.toFixed(2)}`;
 }
 
 function renderAtsProducts(grid, products, selectedMaker = "all") {
@@ -61,7 +65,7 @@ function renderAtsProducts(grid, products, selectedMaker = "all") {
             <p>${product.description || ""}</p>
 
             <div class="product-footer">
-              <span class="price">$${productPrice(product)}</span>
+              <span class="price">${productPrice(product)}</span>
 
               <a class="btn primary" href="skin.html?productId=${encodeURIComponent(product.id)}">
                 View Skin
