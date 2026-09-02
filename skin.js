@@ -87,6 +87,17 @@ async function loadSkin() {
       return;
     }
 
+    document.title = `${product.name} | Kap10's Kustoms`;
+
+const metaDescription = document.querySelector('meta[name="description"]');
+if (metaDescription) {
+  metaDescription.setAttribute(
+    "content",
+    product.description ||
+      `American Truck Simulator skin from Kap10's Kustoms.`
+  );
+}
+
     const galleryImages = await getGalleryImages(product);
 const image = galleryImages[0];
 

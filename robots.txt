@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://kap10skustoms.com/sitemap.xml
