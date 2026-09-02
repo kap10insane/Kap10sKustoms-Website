@@ -104,3 +104,70 @@ function escapeFeaturedWorkHtml(value) {
 }
 
 loadFeaturedWorkGallery();
+
+
+// =========================================================
+// EMAIL SIGNUP
+// =========================================================
+
+const emailSignupForm = document.getElementById("emailSignupForm");
+const emailSignupInput = document.getElementById("emailSignupInput");
+const emailSignupMessage = document.getElementById("emailSignupMessage");
+
+emailSignupForm?.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const email = String(emailSignupInput?.value || "").trim();
+
+  if (!email) return;
+
+  const submitButton = emailSignupForm.querySelector('button[type="submit"]');
+
+  if (submitButton) {
+    submitButton.disabled = true;
+    submitButton.textContent = "Signing Up...";
+  }
+
+  if (emailSignupMessage) {
+    emailSignupMessage.textContent = "";
+  }
+
+  try {
+    const response = await fetch(
+      "https://kap10skustoms-api.kap10skustoms.workers.dev/email-signup",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email })
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok || !data.ok) {
+      throw new Error(data.error || "Unable to sign up.");
+    }
+
+    if (emailSignupMessage) {
+      emailSignupMessage.textContent = data.alreadySubscribed
+        ? "You're already signed up."
+        : "You're signed up. Thanks!";
+    }
+
+    emailSignupForm.reset();
+  } catch (err) {
+    console.error("Email signup failed:", err);
+
+    if (emailSignupMessage) {
+      emailSignupMessage.textContent =
+        err.message || "Unable to sign up right now.";
+    }
+  } finally {
+    if (submitButton) {
+      submitButton.disabled = false;
+      submitButton.textContent = "Sign Up";
+    }
+  }
+});

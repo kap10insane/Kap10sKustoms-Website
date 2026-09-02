@@ -1967,3 +1967,37 @@ button[data-dashboard-tab].active{
 .featured-work-card-content p {
   margin: 0;
 }
+
+.email-signup {
+  margin-top: 28px;
+  max-width: 560px;
+}
+
+.email-signup > p {
+  margin: 8px 0 14px;
+}
+
+.email-signup-form {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.email-signup-form input {
+  flex: 1 1 260px;
+  min-width: 0;
+  padding: 12px 14px;
+  border: 1px solid #2a2a2a;
+  border-radius: 8px;
+  background: #111;
+  color: #fff;
+}
+
+.email-signup-note {
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+.email-signup-message {
+  margin-top: 10px;
+}
