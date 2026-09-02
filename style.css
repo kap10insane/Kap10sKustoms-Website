@@ -1780,6 +1780,27 @@ button[data-dashboard-tab].active{
   margin: 0 auto;
 }
 
+.store-trust-row {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0;
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.store-trust-row span {
+  display: inline-flex;
+  align-items: center;
+}
+
+.store-trust-row span:not(:last-child)::after {
+  content: "•";
+  margin: 0 10px;
+  color: var(--accent);
+}
+
 .mod-maker-filter {
   max-width: 1320px;
   margin: 0 auto 30px;
