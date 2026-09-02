@@ -23,6 +23,10 @@ function digitalCategory(product) {
     return "laser";
   }
 
+  if (platform === "icon packs") {
+    return "icon-packs";
+  }
+
   return "other";
 }
 
@@ -62,6 +66,14 @@ function renderDigitalProducts(grid, products, selectedCategory = "all") {
             data-digital-category="laser"
           >
             Laser Files
+          </button>
+
+          <button
+           type="button"
+           class="mod-maker-btn ${selectedCategory === "icon-packs" ? "active" : ""}"
+           data-digital-category="icon-packs"
+          >
+          Icon Packs
           </button>
 
           <button
@@ -147,7 +159,7 @@ async function loadProducts() {
 
       return (
         productType === "digital" &&
-        ["stl", "laser", "universal"].includes(platform)
+        ["stl", "laser", "universal", "icon packs"].includes(platform)
       );
     });
 
