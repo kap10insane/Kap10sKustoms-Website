@@ -1340,8 +1340,12 @@ document.addEventListener("click", (event) => {
   });
 
   if (target === "orders") {
-    loadOrders();
-  }
+  loadOrders();
+}
+
+if (target === "featured-work") {
+  loadFeaturedWork();
+}
 });
 
 const categoryModal = document.getElementById("categoryModal");
@@ -1914,8 +1918,16 @@ const closeFeaturedWorkModalBtn = document.getElementById("closeFeaturedWorkModa
 const cancelFeaturedWorkBtn = document.getElementById("cancelFeaturedWorkBtn");
 const featuredWorkForm = document.getElementById("featuredWorkForm");
 
+const saveFeaturedWorkBtn = document.getElementById("saveFeaturedWorkBtn");
+
+let editingFeaturedWorkId = null;
+
+let featuredWorkItems = [];
+
 function openFeaturedWorkModal() {
   if (!featuredWorkModal) return;
+
+  editingFeaturedWorkId = null;
 
   featuredWorkForm?.reset();
 
@@ -1939,3 +1951,206 @@ function closeFeaturedWorkModal() {
 newFeaturedWorkBtn?.addEventListener("click", openFeaturedWorkModal);
 closeFeaturedWorkModalBtn?.addEventListener("click", closeFeaturedWorkModal);
 cancelFeaturedWorkBtn?.addEventListener("click", closeFeaturedWorkModal);
+
+
+async function loadFeaturedWork() {
+  const el = document.getElementById("featuredWorkList");
+
+  if (!el) return;
+
+  el.textContent = "Loading Featured Work...";
+
+  try {
+    const response = await fetch(`${API_BASE}/admin/featured-work`, {
+      credentials: "include"
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || !data.ok || !Array.isArray(data.featuredWork)) {
+      throw new Error(data.error || "Failed to load Featured Work.");
+    }
+
+    featuredWorkItems = data.featuredWork;
+
+    if (!data.featuredWork.length) {
+      el.innerHTML = "<p>No Featured Work has been added yet.</p>";
+      return;
+    }
+
+    el.innerHTML = data.featuredWork
+      .map((item) => `
+        <div class="dashboard-list-item">
+  <div>
+    <strong>${escapeHtml(item.title)}</strong>
+    <p>${escapeHtml(item.description || "")}</p>
+    <small>
+      Sort: ${Number(item.sort_order || 0)}
+      &nbsp;|&nbsp;
+      ${item.is_visible ? "Visible" : "Hidden"}
+    </small>
+  </div>
+
+  <button
+    class="btn secondary"
+    type="button"
+    data-featured-work-edit="${item.id}"
+  >
+    Edit
+  </button>
+
+  <button
+  class="btn secondary"
+  type="button"
+  data-featured-work-delete="${item.id}"
+>
+  Delete
+</button>
+
+</div>
+      `)
+      .join("");
+  } catch (err) {
+    console.error("Failed to load Featured Work:", err);
+    el.textContent = "Unable to load Featured Work.";
+  }
+}
+
+
+document.getElementById("featuredWorkList")?.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-featured-work-edit]");
+
+  if (!button) return;
+
+  const id = String(button.dataset.featuredWorkEdit);
+  const item = featuredWorkItems.find(
+    (entry) => String(entry.id) === id
+  );
+
+  if (!item || !featuredWorkModal) return;
+
+  editingFeaturedWorkId = item.id;
+
+  document.getElementById("featuredWorkTitle").value =
+    item.title || "";
+
+  document.getElementById("featuredWorkDescription").value =
+    item.description || "";
+
+  document.getElementById("featuredWorkSortOrder").value =
+    Number(item.sort_order || 0);
+
+  document.getElementById("featuredWorkVisible").checked =
+    Boolean(item.is_visible);
+
+  document.getElementById("featuredWorkImage").value = "";
+
+  const modalTitle = document.getElementById("featuredWorkModalTitle");
+
+  if (modalTitle) {
+    modalTitle.textContent = "Edit Featured Work";
+  }
+
+  featuredWorkModal.classList.remove("hidden");
+});
+
+document.getElementById("featuredWorkList")?.addEventListener("click", async (event) => {
+  const button = event.target.closest("[data-featured-work-delete]");
+
+  if (!button) return;
+
+  const id = button.dataset.featuredWorkDelete;
+
+  if (!confirm("Delete this Featured Work item?")) {
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      `${API_BASE}/admin/featured-work/${encodeURIComponent(id)}`,
+      {
+        method: "DELETE",
+        credentials: "include"
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok || !data.ok) {
+      throw new Error(data.error || "Failed to delete Featured Work.");
+    }
+
+    await loadFeaturedWork();
+  } catch (err) {
+    console.error("Failed to delete Featured Work:", err);
+    alert(err.message);
+  }
+});
+
+saveFeaturedWorkBtn?.addEventListener("click", async () => {
+  const titleInput = document.getElementById("featuredWorkTitle");
+  const descriptionInput = document.getElementById("featuredWorkDescription");
+  const imageInput = document.getElementById("featuredWorkImage");
+  const sortOrderInput = document.getElementById("featuredWorkSortOrder");
+  const visibleInput = document.getElementById("featuredWorkVisible");
+
+  const title = String(titleInput?.value || "").trim();
+
+  if (!title) {
+    alert("Featured Work title is required.");
+    titleInput?.focus();
+    return;
+  }
+
+  const formData = new FormData();
+
+  formData.append("title", title);
+  formData.append(
+    "description",
+    String(descriptionInput?.value || "").trim()
+  );
+  formData.append(
+    "sort_order",
+    String(Number(sortOrderInput?.value || 0))
+  );
+  formData.append(
+    "is_visible",
+    visibleInput?.checked ? "1" : "0"
+  );
+
+  const image = imageInput?.files?.[0];
+
+  if (image) {
+    formData.append("image", image);
+  }
+
+  saveFeaturedWorkBtn.disabled = true;
+  saveFeaturedWorkBtn.textContent = "Saving...";
+
+  try {
+    const url = editingFeaturedWorkId
+  ? `${API_BASE}/admin/featured-work/${encodeURIComponent(editingFeaturedWorkId)}`
+  : `${API_BASE}/admin/featured-work`;
+
+const response = await fetch(url, {
+  method: editingFeaturedWorkId ? "PUT" : "POST",
+  credentials: "include",
+  body: formData
+});
+
+    const data = await response.json();
+
+    if (!response.ok || !data.ok) {
+      throw new Error(data.error || "Failed to save Featured Work.");
+    }
+
+    closeFeaturedWorkModal();
+    await loadFeaturedWork();
+  } catch (err) {
+    console.error("Failed to save Featured Work:", err);
+    alert(err.message);
+  } finally {
+    saveFeaturedWorkBtn.disabled = false;
+    saveFeaturedWorkBtn.textContent = "Save Featured Work";
+  }
+});
