@@ -1925,3 +1925,12 @@ button[data-dashboard-tab].active{
     grid-column: auto;
   }
 }
+
+
+.featured-work-admin-image {
+  width: 120px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+}

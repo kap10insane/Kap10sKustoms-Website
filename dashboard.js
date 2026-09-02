@@ -1988,10 +1988,22 @@ async function loadFeaturedWork() {
 
     el.innerHTML = data.featuredWork
       .map((item) => `
-        <div class="dashboard-list-item">
+       <div class="dashboard-list-item">
+  ${
+    item.image
+      ? `
+        <img
+          src="${item.image}"
+          alt="${escapeFeaturedWorkHtml(item.title)}"
+          class="featured-work-admin-image"
+        >
+      `
+      : ""
+  }
+
   <div>
     <strong>${escapeFeaturedWorkHtml(item.title)}</strong>
-    <p>${escapeFeaturedWorkHtml(item.title)}</p>
+    <p>${escapeFeaturedWorkHtml(item.description || "")}</p>
     <small>
       Sort: ${Number(item.sort_order || 0)}
       &nbsp;|&nbsp;
