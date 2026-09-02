@@ -1902,3 +1902,40 @@ loadPlatforms();
 loadCategoryList();
 loadPlatformList();
 loadDashboardProducts();
+
+
+// =========================================================
+// FEATURED WORK MODAL
+// =========================================================
+
+const featuredWorkModal = document.getElementById("featuredWorkModal");
+const newFeaturedWorkBtn = document.getElementById("newFeaturedWorkBtn");
+const closeFeaturedWorkModalBtn = document.getElementById("closeFeaturedWorkModalBtn");
+const cancelFeaturedWorkBtn = document.getElementById("cancelFeaturedWorkBtn");
+const featuredWorkForm = document.getElementById("featuredWorkForm");
+
+function openFeaturedWorkModal() {
+  if (!featuredWorkModal) return;
+
+  featuredWorkForm?.reset();
+
+  const visibleInput = document.getElementById("featuredWorkVisible");
+  const sortOrderInput = document.getElementById("featuredWorkSortOrder");
+  const title = document.getElementById("featuredWorkModalTitle");
+
+  if (visibleInput) visibleInput.checked = true;
+  if (sortOrderInput) sortOrderInput.value = "0";
+  if (title) title.textContent = "New Featured Work";
+
+  featuredWorkModal.classList.remove("hidden");
+}
+
+function closeFeaturedWorkModal() {
+  if (!featuredWorkModal) return;
+
+  featuredWorkModal.classList.add("hidden");
+}
+
+newFeaturedWorkBtn?.addEventListener("click", openFeaturedWorkModal);
+closeFeaturedWorkModalBtn?.addEventListener("click", closeFeaturedWorkModal);
+cancelFeaturedWorkBtn?.addEventListener("click", closeFeaturedWorkModal);

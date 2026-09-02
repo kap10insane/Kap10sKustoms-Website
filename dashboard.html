@@ -375,7 +375,76 @@
 
   </main>
 
-  
+  <div id="featuredWorkModal" class="modal hidden">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div>
+        <h2 id="featuredWorkModalTitle">New Featured Work</h2>
+        <p>Add or edit a project shown on the homepage.</p>
+      </div>
+
+      <button class="modal-close" type="button" id="closeFeaturedWorkModalBtn">
+        &times;
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <form class="modal-form" id="featuredWorkForm">
+        <div class="modal-field">
+          <label for="featuredWorkTitle">Title</label>
+          <input
+            id="featuredWorkTitle"
+            type="text"
+            placeholder="Custom engraved sign"
+            required
+          >
+        </div>
+
+        <div class="modal-field">
+          <label for="featuredWorkDescription">Description</label>
+          <textarea
+            id="featuredWorkDescription"
+            rows="4"
+            placeholder="Short description of the project."
+          ></textarea>
+        </div>
+
+        <div class="modal-field">
+          <label for="featuredWorkImage">Image</label>
+          <input
+            id="featuredWorkImage"
+            type="file"
+            accept="image/*"
+          >
+        </div>
+
+        <div class="modal-field">
+          <label for="featuredWorkSortOrder">Sort Order</label>
+          <input
+            id="featuredWorkSortOrder"
+            type="number"
+            value="0"
+          >
+        </div>
+
+        <label class="checkbox-row">
+          <input id="featuredWorkVisible" type="checkbox" checked>
+          Show on homepage
+        </label>
+      </form>
+    </div>
+
+    <div class="modal-footer">
+      <button id="cancelFeaturedWorkBtn" class="btn secondary" type="button">
+        Cancel
+      </button>
+
+      <button id="saveFeaturedWorkBtn" class="btn primary" type="button">
+        Save Featured Work
+      </button>
+    </div>
+  </div>
+</div>
 
 <div id="categoryModal" class="modal hidden">
   <div class="modal-content">
