@@ -2067,3 +2067,9 @@ button[data-dashboard-tab].active{
 .email-signup-message {
   margin-top: 10px;
 }
+
+#digitalProductDetail .hero-image {
+  max-height: 720px;
+  object-fit: contain;
+  background: #080808;
+}
