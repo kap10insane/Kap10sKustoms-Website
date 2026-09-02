@@ -1952,6 +1952,14 @@ newFeaturedWorkBtn?.addEventListener("click", openFeaturedWorkModal);
 closeFeaturedWorkModalBtn?.addEventListener("click", closeFeaturedWorkModal);
 cancelFeaturedWorkBtn?.addEventListener("click", closeFeaturedWorkModal);
 
+function escapeFeaturedWorkHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
 
 async function loadFeaturedWork() {
   const el = document.getElementById("featuredWorkList");
@@ -1982,8 +1990,8 @@ async function loadFeaturedWork() {
       .map((item) => `
         <div class="dashboard-list-item">
   <div>
-    <strong>${escapeHtml(item.title)}</strong>
-    <p>${escapeHtml(item.description || "")}</p>
+    <strong>${escapeFeaturedWorkHtml(item.title)}</strong>
+    <p>${escapeFeaturedWorkHtml(item.title)}</p>
     <small>
       Sort: ${Number(item.sort_order || 0)}
       &nbsp;|&nbsp;
