@@ -12,125 +12,192 @@ function productPrice(product) {
     : `$${price.toFixed(2)}`;
 }
 
-function renderAtsProducts(grid, products, selectedMaker = "all") {
-  const makers = [...new Set(
-    products
-      .map((product) => String(product.category || "").trim())
-      .filter(Boolean)
-  )].sort();
+function digitalCategory(product) {
+  const platform = String(product.platform || "").trim().toLowerCase();
 
+  if (platform === "stl") {
+    return "stl";
+  }
+
+  if (platform === "laser") {
+    return "laser";
+  }
+
+  return "other";
+}
+
+function renderDigitalProducts(grid, products, selectedCategory = "all") {
   const visibleProducts =
-    selectedMaker === "all"
+    selectedCategory === "all"
       ? products
-      : products.filter((product) => String(product.category || "").trim() === selectedMaker);
+      : products.filter(
+          (product) => digitalCategory(product) === selectedCategory
+        );
 
   grid.innerHTML = `
     <div class="ats-storefront-stack">
       <div class="mod-maker-filter">
-      <p class="filter-label">Browse by Mod Maker</p>
+        <p class="filter-label">Browse Digital Files</p>
 
-      <div class="mod-maker-buttons">
-        <button
-          type="button"
-          class="mod-maker-btn ${selectedMaker === "all" ? "active" : ""}"
-          data-maker="all"
-        >
-          All
-        </button>
-
-        ${makers.map((maker) => `
+        <div class="mod-maker-buttons">
           <button
             type="button"
-            class="mod-maker-btn ${selectedMaker === maker ? "active" : ""}"
-            data-maker="${maker}"
+            class="mod-maker-btn ${selectedCategory === "all" ? "active" : ""}"
+            data-digital-category="all"
           >
-            ${maker}
+            All
           </button>
-        `).join("")}
+
+          <button
+            type="button"
+            class="mod-maker-btn ${selectedCategory === "stl" ? "active" : ""}"
+            data-digital-category="stl"
+          >
+            3D Print Files
+          </button>
+
+          <button
+            type="button"
+            class="mod-maker-btn ${selectedCategory === "laser" ? "active" : ""}"
+            data-digital-category="laser"
+          >
+            Laser Files
+          </button>
+
+          <button
+            type="button"
+            class="mod-maker-btn ${selectedCategory === "other" ? "active" : ""}"
+            data-digital-category="other"
+          >
+            Other
+          </button>
+        </div>
+      </div>
+
+      <div class="product-grid">
+        ${
+          visibleProducts.length
+            ? visibleProducts
+                .map(
+                  (product) => `
+          <article class="product-card">
+            <img
+              class="product-image"
+              src="${productImage(product)}"
+              alt="${product.name}"
+            >
+
+            <div class="product-info">
+              <h3>${product.name}</h3>
+
+              <p>${product.description || ""}</p>
+
+              <div class="product-footer">
+                <span class="price">${productPrice(product)}</span>
+
+                <a
+                  class="btn primary"
+                  href="digital-product.html?productId=${encodeURIComponent(product.id)}"
+                >
+                  View File
+                </a>
+              </div>
+            </div>
+          </article>
+        `
+                )
+                .join("")
+            : `<p class="loading-text">No files found in this category yet.</p>`
+        }
       </div>
     </div>
-
-    <div class="product-grid">
-      ${visibleProducts.map((product) => `
-        <article class="product-card">
-          <img
-            class="product-image"
-            src="${productImage(product)}"
-            alt="${product.name}"
-          >
-
-          <div class="product-info">
-            <h3>${product.name}</h3>
-
-            <p>${product.description || ""}</p>
-
-            <div class="product-footer">
-              <span class="price">${productPrice(product)}</span>
-
-              <a class="btn primary" href="skin.html?productId=${encodeURIComponent(product.id)}">
-                View Skin
-              </a>
-            </div>
-          </div>
-        </article>
-      `).join("")}
-        </div>
-  </div>
   `;
 }
 
 async function loadProducts() {
-  const grid = document.getElementById("atsProductGrid");
+  const grid = document.getElementById("digitalProductGrid");
 
   if (!grid) return;
 
-  grid.innerHTML = "<p class='loading-text'>Loading ATS skins...</p>";
+  grid.innerHTML =
+    "<p class='loading-text'>Loading digital files...</p>";
 
   try {
     const response = await fetch(`${API_BASE}/products`);
     const products = await response.json();
-    console.log("ATS products API response:", products);
+
+    console.log("Digital products API response:", products);
 
     if (!Array.isArray(products)) {
       throw new Error("Invalid products response");
     }
 
-    const atsProducts = products.filter((product) => {
-  const platform = String(product.platform || "").toLowerCase();
-  return platform === "ats";
-});
+    const digitalProducts = products.filter((product) => {
+      const productType = String(
+        product.product_type || ""
+      )
+        .trim()
+        .toLowerCase();
 
-    if (!atsProducts.length) {
-      grid.innerHTML = "<p class='loading-text'>No ATS skins found yet.</p>";
+      const platform = String(
+        product.platform || ""
+      )
+        .trim()
+        .toLowerCase();
+
+      return (
+        productType === "digital" &&
+        ["stl", "laser", "universal"].includes(platform)
+      );
+    });
+
+    if (!digitalProducts.length) {
+      grid.innerHTML =
+        "<p class='loading-text'>No digital files found yet.</p>";
       return;
     }
 
-       atsProductsCache = atsProducts;
-    renderAtsProducts(grid, atsProductsCache, "all");
+    digitalProductsCache = digitalProducts;
+
+    renderDigitalProducts(
+      grid,
+      digitalProductsCache,
+      "all"
+    );
   } catch (err) {
-  console.error("Product load failed:", err);
+    console.error("Digital product load failed:", err);
 
-  grid.innerHTML = `
-    <div class="loading-text">
-      <p>Could not load ATS skins right now.</p>
-      <p style="font-size: 12px; opacity: .75;">
-        ${err && err.message ? err.message : String(err)}
-      </p>
-    </div>
-  `;
-}
+    grid.innerHTML = `
+      <div class="loading-text">
+        <p>Could not load digital files right now.</p>
+        <p style="font-size: 12px; opacity: .75;">
+          ${err && err.message ? err.message : String(err)}
+        </p>
+      </div>
+    `;
+  }
 }
 
-let atsProductsCache = [];
+let digitalProductsCache = [];
 
 document.addEventListener("click", (event) => {
-  const makerBtn = event.target.closest(".mod-maker-btn");
-  if (!makerBtn) return;
+  const categoryBtn = event.target.closest(
+    "[data-digital-category]"
+  );
 
-  const grid = document.getElementById("atsProductGrid");
+  if (!categoryBtn) return;
+
+  const grid = document.getElementById(
+    "digitalProductGrid"
+  );
+
   if (!grid) return;
 
-  renderAtsProducts(grid, atsProductsCache, makerBtn.dataset.maker || "all");
+  renderDigitalProducts(
+    grid,
+    digitalProductsCache,
+    categoryBtn.dataset.digitalCategory || "all"
+  );
 });
 
 loadProducts();
