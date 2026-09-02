@@ -1703,6 +1703,24 @@ button[data-dashboard-tab].active{
   color: #ffffff;
 }
 
+
+.contact-section > p:not(.eyebrow):not(.copy-message):not(.email-signup-message) {
+  margin: 0 0 18px;
+}
+
+.contact-section > p:not(.eyebrow):not(.copy-message):not(.email-signup-message) strong {
+  display: inline-block;
+  margin-bottom: 4px;
+}
+
+.email-signup {
+  margin: 36px auto 0;
+  padding-top: 28px;
+  max-width: 560px;
+  border-top: 1px solid var(--border);
+}
+
+
 .copy-message {
   opacity: 0;
   color: var(--accent);
@@ -1982,10 +2000,6 @@ button[data-dashboard-tab].active{
   margin: 0;
 }
 
-.email-signup {
-  margin: 28px auto 0;
-  max-width: 560px;
-}
 
 .email-signup > p {
   margin: 8px 0 14px;
