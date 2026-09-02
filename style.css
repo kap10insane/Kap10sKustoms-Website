@@ -227,6 +227,23 @@ a {
   margin-top: auto;
 }
 
+.card-link {
+  display: inline-block;
+  margin-top: 16px;
+  color: var(--accent);
+  font-weight: 700;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.card-link::after {
+  content: " →";
+}
+
+.category-card:hover .card-link {
+  color: var(--accent-hover);
+  transform: translateX(3px);
+}
+
 .split-section {
   display: grid;
   grid-template-columns: 1fr 1fr;
