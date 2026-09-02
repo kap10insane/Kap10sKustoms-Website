@@ -67,13 +67,13 @@ a {
 }
 
 .hero {
-  min-height: 360px;
+  min-height: 280px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  padding: 70px 30px 60px;
+  padding: 50px 30px 40px;
 
   text-align: center;
 
@@ -150,7 +150,7 @@ a {
 .section {
   max-width: var(--max-width);
   margin: auto;
-  padding: 55px 30px;
+  padding: 42px 30px;
 }
 
 .section-heading {
@@ -1950,6 +1950,12 @@ button[data-dashboard-tab].active{
   gap: 24px;
 }
 
+.featured-work-gallery > p {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--muted);
+}
+
 .featured-work-card {
   background: #111;
   border: 1px solid #2a2a2a;
@@ -1977,7 +1983,7 @@ button[data-dashboard-tab].active{
 }
 
 .email-signup {
-  margin-top: 28px;
+  margin: 28px auto 0;
   max-width: 560px;
 }
 
